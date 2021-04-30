@@ -236,8 +236,20 @@ class MyClient(discord.Client):
                             await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                     else:
                         await message.channel.send(message.author.mention+" That item does not exist, use `.shop <SHOP_ID>` to see all available items")
-            elif command in ["inv", "inventory", "items"]:
-                pass
+            elif command in ["inv", "inventory", "items"]: # Add pages!
+                user = str(message.author.id)
+                name = message.author.name
+                if len(command) != 1 and len(message.mentions) > 0:
+                    user = str(message.mention[0].id)
+                    name = message.mentions[0].name
+                embed = discord.Embed(title=name+"'s Inventory", color=discord.Color.blue())
+                if len(self.database["user"][user]["inventory"]["items"]) > 0:
+                    for item in self.database["user"][user]["inventory"]["items"]:
+                        pass
+                if len(self.database["user"][user]["inventory"]["drugs"]) > 0:
+                    embed.add_field(":: **Drugs:**")
+                    for drug in self.database["user"][user]["inventory"]["drugs"]:
+                        pass
 
 if __name__ == "__main__":
     client = MyClient()
