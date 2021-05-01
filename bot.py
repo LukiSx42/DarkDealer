@@ -326,6 +326,8 @@ class MyClient(discord.Client):
                     building = self.database["user"][user]["lab"]
                     embed.add_field(name=":microscope: Lab: **"+building["type"]+"**", value=building["name"]+"\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Production capacity: "+str(building["size"])+" | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
                 await message.channel.send(embed=embed)
+            elif command[0] == "grow": # The grow menu + option to grow
+                pass
 
 if __name__ == "__main__":
     client = MyClient()
