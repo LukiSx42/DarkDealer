@@ -25,6 +25,8 @@ class MyClient(discord.Client):
         self.currency = "$"
         self.databasePath = "C:\\Users\\lukas\\Documents\\PythonStuff\\Discord\\DarkDealer\\database.json"
         self.database = self.loadDB()
+        self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder"}
+        self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A faster way to dry weed. (1000W) (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)"}
         self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":30, "cocaine":50, "heroin":20, "amp":20}
         self.buildings = {
             "house":[
@@ -46,7 +48,7 @@ class MyClient(discord.Client):
                 {"type":"Small lab", "name":"Friend's kitchen", "size":4, "electricity":0.35, "price":15000},
                 {"type":"Medium lab", "name":"Normal chemical lab", "size":10, "electricity":0.3, "price":75000},
                 {"type":"Large lab", "name":"Modern lab", "size":25, "electricity":0.3, "price":250000},
-                {"type":"XL lab", "name":"Now this is sience!", "size":75, "electricity":0.25, "price":1000000}]}
+                {"type":"XL lab", "name":"This is sience!", "size":75, "electricity":0.25, "price":1000000}]}
         self.starterHouse = self.buildings["house"][0]
         print("BOT IS READY")
 
@@ -121,7 +123,7 @@ class MyClient(discord.Client):
                 embed.set_author(name=name+"'s profile", icon_url=str(avatar).replace("size=1024", "size=256"))
                 embed.add_field(name='Level', value=str(self.database["user"][user]["lvl"]), inline=True)
                 embed.add_field(name='Balance', value=self.currency+" "+self.nice_number(self.database["user"][user]["balance"]), inline=True)
-                embed.add_field(name='Inventory', value="Player has `"+str(len(self.database["user"][user]["inventory"]))+"` different items in his inventory", inline=False)
+                embed.add_field(name='Inventory', value="Player has `"+str(len(self.database["user"][user]["inventory"]["items"]))+"` different items in his inventory", inline=False)
                 if self.database["user"][user]["job"] != None:
                     embed.add_field(name='Employment', value="Player is working as a "+str(self.database["user"][user]["job"]), inline=False)
                 await message.channel.send(embed=embed)
@@ -185,7 +187,7 @@ class MyClient(discord.Client):
                         embed.set_thumbnail(url="https://image.freepik.com/free-vector/green-neon-sign-marijuana-leaves-cannabis-logo_1268-14217.jpg")
                         embed.add_field(name=":seedling: Ruderalis seeds - "+str(self.prices["ruderalis"])+" "+self.currency, value="Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", inline=False)
                         embed.add_field(name=":seedling: Indica seeds - "+str(self.prices["indica"])+" "+self.currency, value="Grat seeds, slow growth, 30g per plant. (id => `indica`)", inline=False)
-                        embed.add_field(name=":potted_plant: Flower Pot - "+str(self.prices["pot"])+" "+self.currency, value="Needed to plant weed. (id => `pot`)", inline=False)
+                        embed.add_field(name=":potted_plant: Flower Pot - "+str(self.prices["pot"])+" "+self.currency, value="Needed to grow weed. (id => `pot`)", inline=False)
                         embed.add_field(name=":bulb: LED Lamp - "+str(self.prices["led"])+" "+self.currency, value="Cheap and not power efficient lamp. (750W) (id => `led`)", inline=False)
                         embed.add_field(name=":bulb: HID Lamp - "+str(self.prices["hid"])+" "+self.currency, value="High quality and power efficient lamp. (500W) (id => `hid`)", inline=False)
                         embed.add_field(name=":control_knobs: Electric Dryer - "+str(self.prices["dryer"])+" "+self.currency, value="A faster way to dry weed. (1000W) (id => `dryer`)", inline=False)
@@ -236,20 +238,46 @@ class MyClient(discord.Client):
                             await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                     else:
                         await message.channel.send(message.author.mention+" That item does not exist, use `.shop <SHOP_ID>` to see all available items")
-            elif command in ["inv", "inventory", "items"]: # Add pages!
+            elif command[0] in ["inv", "inventory", "items"]: # TODO: Drugs
                 user = str(message.author.id)
                 name = message.author.name
-                if len(command) != 1 and len(message.mentions) > 0:
+                page = 1
+                if len(message.mentions) > 0:
                     user = str(message.mention[0].id)
                     name = message.mentions[0].name
-                embed = discord.Embed(title=name+"'s Inventory", color=discord.Color.blue())
+                    if len(command) > 2:
+                        try:
+                            page = int(command[2])
+                        except:
+                            page = 1
+                elif len(command) > 1:
+                    try:
+                        page = int(command[1])
+                    except:
+                        page = 1
+                pages = [[]]
                 if len(self.database["user"][user]["inventory"]["items"]) > 0:
                     for item in self.database["user"][user]["inventory"]["items"]:
-                        pass
+                        if len(pages[-1]) < 5:
+                            pages[-1].append(("**"+self.fullName[item]+"** ─ "+str(self.database["user"][user]["inventory"]["items"][item]), self.description[item]))
+                        else:
+                            pages.append([("**"+self.fullName[item]+"** ─ "+str(self.database["user"][user]["inventory"]["items"][item]), self.description[item])])
                 if len(self.database["user"][user]["inventory"]["drugs"]) > 0:
-                    embed.add_field(":: **Drugs:**")
                     for drug in self.database["user"][user]["inventory"]["drugs"]:
-                        pass
+                        if len(pages[-1]) >= 5:
+                            pages[-1].append(("drug"))
+                        else:
+                            pages.append([])
+                print(pages)
+                if page > len(pages):
+                    await message.channel.send(message.author.mention+" Sorry, but you only have `"+str(len(pages))+"` pages")
+                elif pages[page-1] == []:
+                    await message.channel.send(message.author.mention+" Your inventory is empty")
+                else:
+                    embed = discord.Embed(title=name+"'s Inventory", color=discord.Color.blue())
+                    for item in pages[page-1]:
+                        embed.add_field(name=item[0], value=item[1])
+                    await message.channel.send(embed=embed)
 
 if __name__ == "__main__":
     client = MyClient()
