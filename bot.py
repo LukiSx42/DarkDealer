@@ -81,7 +81,7 @@ class MyClient(discord.Client):
         if message.content.startswith(self.prefix):
             if str(message.author.id) not in self.database["user"]:
                 await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help`")
-                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":None}, "inventory":{"items":{}, "drugs":[]}, "lvl":1, "job":None, "lastJob":0}
+                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":None}, "inventory":{"items":{}, "drugs":[]}, "lvl":1, "job":None, "lastJob":0, "growing":[]}
             command = message.content.lower()[len(self.prefix):].split(" ")
             if command[0] == "ping":
                 await command.channel.send("Pong!")
@@ -327,7 +327,28 @@ class MyClient(discord.Client):
                     embed.add_field(name=":microscope: Lab: **"+building["type"]+"**", value=building["name"]+"\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Production capacity: "+str(building["size"])+" | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
                 await message.channel.send(embed=embed)
             elif command[0] == "grow": # The grow menu + option to grow
-                pass
+                user = str(message.author.id)
+                name = str(message.author.name)
+                if len(message.mentions) > 0:
+                    user = str(message.mentions[0].id)
+                    name = str(message.mentions[0].name)
+                if len(command) >= 2:
+                    pass
+                else:
+                    embed = discord.Embed(title="Grow Menu", color=discord.Color.green())
+                    capacity = self.database["user"][user]["house"]["size"]
+                    if self.database["user"][user]["warehouse"] != None:
+                        capacity += self.database["user"][user]["warehouse"]["size"]
+                    growing, grown = 0, 0
+                    for plant in self.database["user"][user]["growing"]:
+                        if plant["growTime"] < time():
+                            grown += 1
+                        else:
+                            growing += 1
+                    embed.add_field(name=":potted_plant: **Currently Growing**", value="Growing `"+str(growing)+"` out of `"+str(capacity)+"` plants")
+                    embed.add_field(name=":potted_plant: **Harvestable**", value="There are `"+str(grown)+"` harvestable plants")
+                    embed.set_thumbnail(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpsdlearning.com%2Fwp-content%2Fuploads%2F2017%2F09%2FCannabis-logo.jpg&f=1&nofb=1")
+                    await message.channel.send(embed=embed)
 
 if __name__ == "__main__":
     client = MyClient()
