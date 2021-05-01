@@ -30,26 +30,31 @@ class MyClient(discord.Client):
         self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":30, "cocaine":50, "heroin":20, "amp":20}
         self.buildings = {
             "house":[
-                {"type":"Small appartment", "name":"Starter appartment", "size":2, "electricity":0.4, "price":30000},
-                {"type":"Medium appartment", "name":"Friends place", "size":5, "electricity":0.35, "price":80000},
-                {"type":"Large appartment", "name":"A more luxurious appartment", "size":10, "electricity":0.35, "price":150000},
-                {"type":"Small house", "name":"Grandma's small house", "size":25, "electricity":0.4, "price":200000},
-                {"type":"Medium house", "name":"Avarge house", "size":35, "electricity":0.35, "price":300000},
-                {"type":"Large house", "name":"Nice and big house", "size":65, "electricity":0.3, "price":500000},
-                {"type":"Medium mansion", "name":"A fucking mansion!", "size":80, "electricity":0.35, "price":1000000},
-                {"type":"Large mansion", "name":"Now this is just flex...", "size":110, "electricity":0.3, "price":2500000}],
+                {"type":"Small appartment", "name":"Starter appartment", "size":2, "electricity":0.4, "price":30000, "id":"smallappartment"},
+                {"type":"Medium appartment", "name":"Friends place", "size":5, "electricity":0.35, "price":80000, "id":"mediumappartment"},
+                {"type":"Large appartment", "name":"A more luxurious appartment", "size":10, "electricity":0.35, "price":150000, "id":"largeappartment"},
+                {"type":"Small house", "name":"Grandma's small house", "size":25, "electricity":0.4, "price":200000, "id":"smallhouse"},
+                {"type":"Medium house", "name":"Avarge house", "size":35, "electricity":0.35, "price":300000, "id":"mediumhouse"},
+                {"type":"Large house", "name":"Nice and big house", "size":65, "electricity":0.3, "price":500000, "id":"largehouse"},
+                {"type":"Medium mansion", "name":"A fucking mansion!", "size":80, "electricity":0.35, "price":1000000, "id":"mediummansion"},
+                {"type":"Large mansion", "name":"Now this is just flex...", "size":110, "electricity":0.3, "price":2500000, "id":"largemansion"}],
             "warehouse":[
-                {"type":"Mini warehouse", "name":"Friend's garage", "size":5, "electricity":0.2, "price":20000},
-                {"type":"Small warehouse", "name":"Abadoned warehouse", "size":20, "electricity":0.2, "price":100000},
-                {"type":"Medium warehouse", "name":"A regular warehouse", "size":100, "electricity":0.15, "price":750000},
-                {"type":"Large warehouse", "name":"A nice big place to grow stuff", "size":250, "electricity":0.15, "price":1500000},
-                {"type":"Mega warehouse", "name":"Now this is a warehouse!", "size":500, "electricity":0.15, "price":4000000}],
+                {"type":"Mini warehouse", "name":"Friend's garage", "size":5, "electricity":0.2, "price":20000, "id":"miniwarehouse"},
+                {"type":"Small warehouse", "name":"Abadoned warehouse", "size":20, "electricity":0.2, "price":100000, "id":"smallwarehouse"},
+                {"type":"Medium warehouse", "name":"A regular warehouse", "size":100, "electricity":0.15, "price":750000, "id":"mediumwarehouse"},
+                {"type":"Large warehouse", "name":"A nice big place to grow stuff", "size":250, "electricity":0.15, "price":1500000, "id":"largewarehouse"},
+                {"type":"Mega warehouse", "name":"Now this is a warehouse!", "size":500, "electricity":0.15, "price":4000000, "id":"megawarehouse"}],
             "lab":[
-                {"type":"Small lab", "name":"Friend's kitchen", "size":4, "electricity":0.35, "price":15000},
-                {"type":"Medium lab", "name":"Normal chemical lab", "size":10, "electricity":0.3, "price":75000},
-                {"type":"Large lab", "name":"Modern lab", "size":25, "electricity":0.3, "price":250000},
-                {"type":"XL lab", "name":"This is sience!", "size":75, "electricity":0.25, "price":1000000}]}
+                {"type":"Small lab", "name":"Friend's kitchen", "size":4, "electricity":0.35, "price":15000, "id":"smalllab"},
+                {"type":"Medium lab", "name":"Normal chemical lab", "size":10, "electricity":0.3, "price":75000, "id":"mediumlab"},
+                {"type":"Large lab", "name":"Modern lab", "size":25, "electricity":0.3, "price":250000, "id":"largelab"},
+                {"type":"XL lab", "name":"This is sience!", "size":75, "electricity":0.25, "price":1000000, "id":"xllab"}]}
         self.starterHouse = self.buildings["house"][0]
+        self.buildingDB = {}
+        for buildingType in self.buildings:
+            for building in self.buildings[buildingType]:
+                building["btype"] = buildingType
+                self.buildingDB[building["id"]] = building
         print("BOT IS READY")
 
     def loadDB(self):
@@ -77,7 +82,7 @@ class MyClient(discord.Client):
             if str(message.author.id) not in self.database["user"]:
                 await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help`")
                 self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":None}, "inventory":{"items":{}, "drugs":[]}, "lvl":1, "job":None, "lastJob":0}
-            command = message.content[len(self.prefix):].split(" ")
+            command = message.content.lower()[len(self.prefix):].split(" ")
             if command[0] == "ping":
                 await command.channel.send("Pong!")
             elif command[0] == "help":
@@ -178,10 +183,11 @@ class MyClient(discord.Client):
                 embed.add_field(name=":potted_plant: Smoky", value="Everyting that your weed growing needs. (id => `smoky`/`weed`)", inline=False)
                 embed.add_field(name=":scientist: Science Needs", value="We sell high quality lab equpment. (id => `science`/`lab`)", inline=False)
                 embed.add_field(name=":mag_right: Power of Powder", value="We sell powder that can be turned into large amounts of powder drugs. (id => `powder`)", inline=False)
+                embed.add_field(name=":house: PrimeLocation", value="We sell great appartments, warehouses, labs... (id => `location`/`buildings`/`properties`)", inline=False)
                 embed.set_footer(text="You can visit any shop with "+self.prefix+"shop <SHOP_ID>")
                 await message.channel.send(embed=embed)
             elif command[0] == "shop":
-                if len(command) == 2:
+                if len(command) == 2 or len(command) == 3:
                     if command[1] in ["smoky", "weed"]:
                         embed = discord.Embed(title=":potted_plant: Smoky", color=discord.Color.green())
                         embed.set_thumbnail(url="https://image.freepik.com/free-vector/green-neon-sign-marijuana-leaves-cannabis-logo_1268-14217.jpg")
@@ -208,6 +214,23 @@ class MyClient(discord.Client):
                         embed.add_field(name=":cloud: Heroin Powder - "+str(self.prices["pot"])+" "+self.currency, value="1g powder ==> 4g herion (id => `heroin`)", inline=False)
                         embed.set_footer(text="You can buy stuff with "+self.prefix+"buy <ITEM_ID> <AMOUNT (optional)>")
                         await message.channel.send(embed=embed)
+                    elif command[1] in ["location", "building", "buildings", "houses", "properties", "property", "prime", "primelocation"]:
+                        embed = discord.Embed(title=":house: PrimeLocation", color=discord.Color.gold())
+                        embed.set_thumbnail(url="https://media.istockphoto.com/vectors/house-abstract-sign-design-vector-linear-style-vector-id1131184921?k=6&m=1131184921&s=612x612&w=0&h=X5MCxDEER4QrVvE2olwd-ZZuVAa-NFKzKGRgupestQ8=")
+                        if len(command) <= 2:
+                            embed.description = "Welcome to PrimeLocation, please use `"+self.prefix+"shop primelocation <BUILDING_TYPE>` a building type is a `house`/`warehouse`/`lab`\n\n\nTip: you don't need to use the whole `primelocation` thing, you can just use `prime` or `houses`..."
+                        else:
+                            if command[2] in ["house", "houses", "appartment", "appartments"]:
+                                for building in self.buildings["house"]:
+                                    embed.add_field(name=":house: **"+building["type"]+"**", value=building["name"]+" (id => `"+building["id"]+"`)\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Grow space: "+str(building["size"])+" plants | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
+                            elif command[2] in ["warehouse", "warehouses"]:
+                                for building in self.buildings["warehouse"]:
+                                    embed.add_field(name=":hotel: **"+building["type"]+"**", value=building["name"]+" (id => `"+building["id"]+"`)\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Grow space: "+str(building["size"])+" plants | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
+                            elif command[2] in ["lab", "labs", "laboratory", "laboratories"]:
+                                for building in self.buildings["lab"]:
+                                    embed.add_field(name=":microscope: **"+building["type"]+"**", value=building["name"]+" (id => `"+building["id"]+"`)\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Production capacity: "+str(building["size"])+" | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
+                        embed.set_footer(text="You can buy a building with "+self.prefix+"buy <BUILDING_ID>")
+                        await message.channel.send(embed=embed)
                     else:
                         await message.channel.send(message.author.mention+" There is no shop with that ID, use `"+self.prefix+"shops` to view all available shops")
                 else:
@@ -216,17 +239,17 @@ class MyClient(discord.Client):
                 if len(command) < 2 or len(command) > 3:
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"buy <ITEM_ID> <AMOUNT (optional)>`")
                 else:
-                    price = self.prices[command[1]]
-                    amount = 1
-                    if len(command) == 3:
-                        try:
-                            amount = int(command[2])
-                        except:
-                            await message.channel.send(message.author.mention+" Please specify a valid amount `"+self.prefix+"buy <ITEM_ID> <AMOUNT (optional)>`")
-                            return
-                        price = self.prices[command[1]]*amount
                     user = str(message.author.id)
                     if command[1] in self.prices:
+                        price = self.prices[command[1]]
+                        amount = 1
+                        if len(command) == 3:
+                            try:
+                                amount = int(command[2])
+                            except:
+                                await message.channel.send(message.author.mention+" Please specify a valid amount `"+self.prefix+"buy <ITEM_ID> <AMOUNT (optional)>`")
+                                return
+                            price = self.prices[command[1]]*amount
                         if self.database["user"][user]["balance"]-price >= 0:
                             self.database["user"][user]["balance"] -= price
                             if command[1] not in self.database["user"][user]["inventory"]["items"]:
@@ -236,8 +259,16 @@ class MyClient(discord.Client):
                             await message.channel.send(message.author.mention+" You bought **"+str(amount)+"x "+command[1]+"**")
                         else:
                             await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
+                    elif command[1] in self.buildingDB:
+                        building = self.buildingDB[command[1]]
+                        if self.database["user"][user]["balance"]-building["price"] >= 0:
+                            self.database["user"][user]["balance"] -= building["price"]
+                            self.database["user"][user][building["btype"]] = building
+                            await message.channel.send(message.author.mention+" You got yourself a new "+building["btype"]+"!")
+                        else:
+                            await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                     else:
-                        await message.channel.send(message.author.mention+" That item does not exist, use `.shop <SHOP_ID>` to see all available items")
+                        await message.channel.send(message.author.mention+" That item/building does not exist, use `.shop <SHOP_ID>` to see all available items and buildings")
             elif command[0] in ["inv", "inventory", "items"]: # TODO: Drugs
                 user = str(message.author.id)
                 name = message.author.name
@@ -278,6 +309,23 @@ class MyClient(discord.Client):
                     for item in pages[page-1]:
                         embed.add_field(name=item[0], value=item[1])
                     await message.channel.send(embed=embed)
+            elif command[0] in ["buildings", "houses", "houselist", "homelist"]:
+                user = str(message.author.id)
+                name = str(message.author.name)
+                if len(message.mentions) > 0:
+                    user = str(message.mentions[0].id)
+                    name = str(message.mentions[0].name)
+                embed = discord.Embed(title=name+"'s Buildings", description="List of owned buildings", color=discord.Color.gold())
+                if self.database["user"][user]["house"] != None:
+                    building = self.database["user"][user]["house"]
+                    embed.add_field(name=":house: House: **"+building["type"]+"**", value=building["name"]+"\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Grow space: "+str(building["size"])+" plants | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
+                if self.database["user"][user]["warehouse"] != None:
+                    building = self.database["user"][user]["warehouse"]
+                    embed.add_field(name=":hotel: Warehouse: **"+building["type"]+"**", value=building["name"]+"\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Grow space: "+str(building["size"])+" plants | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
+                if self.database["user"][user]["lab"] != None:
+                    building = self.database["user"][user]["lab"]
+                    embed.add_field(name=":microscope: Lab: **"+building["type"]+"**", value=building["name"]+"\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Production capacity: "+str(building["size"])+" | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
+                await message.channel.send(embed=embed)
 
 if __name__ == "__main__":
     client = MyClient()
