@@ -522,7 +522,7 @@ if __name__ == "__main__":
         if str(system()).lower() == "windows":
             path = "C:\\Users\\lukas\\Documents\\PythonStuff\\Discord\\darkDealerToken.tk"
         else:
-            path = "/Users/lukasoravec/Documents/Python Stuff/Random/darkDealerToken.tk"
+            path = "/Library/DarkDealer/token.tk"
         f = open(path, 'r')
         token = f.read()
         f.close()
