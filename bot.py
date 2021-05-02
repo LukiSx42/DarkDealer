@@ -1,6 +1,13 @@
 import discord, os, json, datetime, random
 from time import time
+from platform import system
 from math import *
+
+# TODO LIST
+# Level system (ability to level up)
+# Ability to produce cocaine
+# Sell the drugs (Qucksell + NPC + Player market)
+# Police
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -26,7 +33,9 @@ class MyClient(discord.Client):
         self.databasePath = "C:\\Users\\lukas\\Documents\\PythonStuff\\Discord\\DarkDealer\\database.json"
         self.database = self.loadDB()
         self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder"}
+        self.drugName = {"weed":":herb: Weed", "meth":":cloud: Crystal Meth", "cocaine":":cloud: Cocaine", "heroin":":cloud: Herion", "amp":":cloud: Amphetamine"}
         self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A faster way to dry weed. (1000W) (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)"}
+        self.drugDescription = {"weed":"The green stuff", "meth":"White powder with good effects", "cocaine":"The most expensive drug", "heroin":"The more serious drug", "amp":"So you wanna be fast?"}
         self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":30, "cocaine":50, "heroin":20, "amp":20}
         self.buildings = {
             "house":[
@@ -55,6 +64,7 @@ class MyClient(discord.Client):
             for building in self.buildings[buildingType]:
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
+        self.electricityMultiplayer = 1.5
         print("BOT IS READY")
 
     def loadDB(self):
@@ -79,9 +89,14 @@ class MyClient(discord.Client):
         if message.author == client.user:
             return
         if message.content.startswith(self.prefix):
+            t = time()
             if str(message.author.id) not in self.database["user"]:
                 await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help`")
-                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":None}, "inventory":{"items":{}, "drugs":[]}, "lvl":1, "job":None, "lastJob":0, "growing":[]}
+                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":None}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "electricity":0, "lastBill":round(time())}
+            if self.database["user"][str(message.author.id)]["lastBill"]+86400 < time():
+                self.database["user"][str(message.author.id)]["balance"] -= self.database["user"][str(message.author.id)]["electricity"]*self.electricityMultiplayer
+                self.database["user"][str(message.author.id)]["electricity"] = 0
+                self.database["user"][str(message.author.id)]["lastBill"] = round(time())
             command = message.content.lower()[len(self.prefix):].split(" ")
             if command[0] == "ping":
                 await command.channel.send("Pong!")
@@ -111,6 +126,9 @@ class MyClient(discord.Client):
                     name = message.mentions[0].name
                 if user in self.database["user"]:
                     bal = self.nice_number(self.database["user"][user]["balance"])
+                    if "." in bal:
+                        bal = self.nice_number(int(bal.split(".")[0].replace(" ", "")))
+                        self.database["user"][user]["balance"] = round(self.database["user"][user]["balance"])
                 else:
                     bal = 0
                 embed = discord.Embed(title=name+"'s balance", description="Balance: "+self.currency+" "+str(bal), color=discord.Color.green())
@@ -269,7 +287,7 @@ class MyClient(discord.Client):
                             await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                     else:
                         await message.channel.send(message.author.mention+" That item/building does not exist, use `.shop <SHOP_ID>` to see all available items and buildings")
-            elif command[0] in ["inv", "inventory", "items"]: # TODO: Drugs
+            elif command[0] in ["inv", "inventory", "items"]:
                 user = str(message.author.id)
                 name = message.author.name
                 page = 1
@@ -293,13 +311,6 @@ class MyClient(discord.Client):
                             pages[-1].append(("**"+self.fullName[item]+"** ─ "+str(self.database["user"][user]["inventory"]["items"][item]), self.description[item]))
                         else:
                             pages.append([("**"+self.fullName[item]+"** ─ "+str(self.database["user"][user]["inventory"]["items"][item]), self.description[item])])
-                if len(self.database["user"][user]["inventory"]["drugs"]) > 0:
-                    for drug in self.database["user"][user]["inventory"]["drugs"]:
-                        if len(pages[-1]) >= 5:
-                            pages[-1].append(("drug"))
-                        else:
-                            pages.append([])
-                print(pages)
                 if page > len(pages):
                     await message.channel.send(message.author.mention+" Sorry, but you only have `"+str(len(pages))+"` pages")
                 elif pages[page-1] == []:
@@ -307,7 +318,46 @@ class MyClient(discord.Client):
                 else:
                     embed = discord.Embed(title=name+"'s Inventory", color=discord.Color.blue())
                     for item in pages[page-1]:
-                        embed.add_field(name=item[0], value=item[1])
+                        embed.add_field(name=item[0], value=item[1], inline=False)
+                    await message.channel.send(embed=embed)
+            elif command[0] in ["drugs", "druglist"]: # TODO Mixes
+                user = str(message.author.id)
+                name = message.author.name
+                page = 1
+                if len(message.mentions) > 0:
+                    user = str(message.mention[0].id)
+                    name = message.mentions[0].name
+                    if len(command) > 2:
+                        try:
+                            page = int(command[2])
+                        except:
+                            page = 1
+                elif len(command) > 1:
+                    try:
+                        page = int(command[1])
+                    except:
+                        page = 1
+                pages = [[]]
+                if len(self.database["user"][user]["inventory"]["drugs"]["pure"]) > 0:
+                    for drug in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                        if len(pages[-1]) < 5:
+                            pages[-1].append(("**"+self.drugName[drug]+"** ─ "+str(self.database["user"][user]["inventory"]["drugs"]["pure"][drug])+" grams", self.drugDescription[drug]))
+                        else:
+                            pages.append([("**"+self.drugName[drug]+"** ─ "+str(self.database["user"][user]["inventory"]["drugs"]["pure"][drug])+" grams", self.drugDescription[drug])])
+                if len(self.database["user"][user]["inventory"]["drugs"]["mixes"]) > 0:
+                    for drug in self.database["user"][user]["inventory"]["drugs"]["mixes"]:
+                        if len(pages[-1]) < 5:
+                            pages[-1].append(("**"+self.drugName[drug]+"** ─ "+str(self.database["user"][user]["inventory"]["drugs"]["mixes"][drug])+" grams", self.drugDescription[drug]))
+                        else:
+                            pages.append([("**"+self.fuldrugNamelName[drug]+"** ─ "+str(self.database["user"][user]["inventory"]["drugs"]["mixes"][drug])+" grams", self.drugDescription[drug])])
+                if page > len(pages):
+                    await message.channel.send(message.author.mention+" Sorry, but you only have `"+str(len(pages))+"` pages")
+                elif pages[page-1] == []:
+                    await message.channel.send(message.author.mention+" Your drug inventory is empty")
+                else:
+                    embed = discord.Embed(title=name+"'s Drugs", color=discord.Color.red())
+                    for drug in pages[page-1]:
+                        embed.add_field(name=drug[0], value=drug[1], inline=False)
                     await message.channel.send(embed=embed)
             elif command[0] in ["buildings", "houses", "houselist", "homelist"]:
                 user = str(message.author.id)
@@ -326,32 +376,155 @@ class MyClient(discord.Client):
                     building = self.database["user"][user]["lab"]
                     embed.add_field(name=":microscope: Lab: **"+building["type"]+"**", value=building["name"]+"\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Production capacity: "+str(building["size"])+" | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
                 await message.channel.send(embed=embed)
-            elif command[0] == "grow": # The grow menu + option to grow
+            elif command[0] == "grow":
+                user = str(message.author.id)
+                name = str(message.author.name)
+                target = 1
+                if len(message.mentions) > 0:
+                    user = str(message.mentions[0].id)
+                    name = str(message.mentions[0].name)
+                    target = 2
+                if (len(command) >= 3 and len(message.mentions) > 0) or (len(command) >= 2 and len(message.mentions) == 0):
+                    embed = discord.Embed(title="Grow Menu", color=discord.Color.green())
+                    embed.set_thumbnail(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpsdlearning.com%2Fwp-content%2Fuploads%2F2017%2F09%2FCannabis-logo.jpg&f=1&nofb=1")
+                    if command[target] == "info":
+                        capacity = self.database["user"][user]["house"]["size"]
+                        if self.database["user"][user]["warehouse"] != None:
+                            capacity += self.database["user"][user]["warehouse"]["size"]
+                        growing, grown = 0, 0
+                        topTime = 0
+                        for plant in self.database["user"][user]["growing"]:
+                            if plant["growTime"] < time():
+                                grown += 1
+                            else:
+                                if plant["growTime"] < topTime or (topTime == 0 and time() < plant["growTime"]):
+                                    topTime = plant["growTime"]
+                                growing += 1
+                        destTime = 0
+                        if topTime != 0:
+                            destTime = topTime-time()
+                        remaining = str(datetime.timedelta(seconds=round(destTime))).split(":")
+                        for i in range(len(remaining)):
+                            if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                remaining[i] = remaining[i][1:]
+                        embed.add_field(name=":potted_plant: **Currently Growing**", value="Growing `"+str(growing)+"` out of `"+str(capacity)+"` plants", inline=False)
+                        embed.add_field(name=":potted_plant: **Top Growing**", value="You need to wait about "+remaining[0]+" hours and "+remaining[1]+" minutes before your next plant grows", inline=False)
+                        embed.add_field(name=":potted_plant: **Harvestable**", value="There are `"+str(grown)+"` harvestable plants", inline=False)
+                        await message.channel.send(embed=embed)
+                    elif command[target] == "grow":
+                        if len(command) == target+3 or len(command) == target+4:
+                            amount = 1
+                            if len(command) == target+4:
+                                try:
+                                    amount = int(command[target+3])
+                                except:
+                                    await message.channel.send(message.author.mention+" That's not a valid number")
+                                    return
+                            if command[target+1] in ["ruderalis", "indica"]:
+                                if command[target+2] in ["house", "warehouse"]:
+                                    if self.database["user"][user][command[target+2]] != None:
+                                        capacity = self.database["user"][user][command[target+2]]["size"]
+                                        if capacity-len(self.database["user"][user]["growing"]) >= amount:
+                                            lamps = []
+                                            lamp = None
+                                            pots = 0
+                                            pot = False
+                                            for plant in self.database["user"][user]["growing"]:
+                                                lamps.append(plant["lamp"])
+                                                pots += 1
+                                            if "hid" in self.database["user"][user]["inventory"]["items"]:
+                                                if self.database["user"][user]["inventory"]["items"]["hid"] > lamps.count("hid"):
+                                                    lamp = "hid"
+                                            if lamp == None:
+                                                if "led" in self.database["user"][user]["inventory"]["items"]:
+                                                    if self.database["user"][user]["inventory"]["items"]["led"] > lamps.count("led"):
+                                                        lamp = "led"
+                                            if "pot" in self.database["user"][user]["inventory"]["items"]:
+                                                if self.database["user"][user]["inventory"]["items"]["pot"] > pots:
+                                                    pot = True
+                                            if lamp != None:
+                                                if pot:
+                                                    speed = 1
+                                                    watts = 1000
+                                                    seedTime = 108000
+                                                    if lamp == "hid":
+                                                        speed = 1.5
+                                                        watts = 400
+                                                    if command[target+1] == "ruderalis":
+                                                        seedTime = 72000
+                                                    growTime = seedTime/speed
+                                                    self.database["user"][user]["growing"].append({"seed":command[target+1], "growTime":round(time()+growTime)})
+                                                    self.database["user"][user]["electricity"] += (watts/1000)*growTime
+                                                    remaining = str(datetime.timedelta(seconds=growTime)).split(":")
+                                                    for i in range(len(remaining)):
+                                                        if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                                            remaining[i] = remaining[i][1:]
+                                                    await message.channel.send(message.author.mention+" You planted a "+command[target+1]+" seed with a "+lamp+" lamp, it will take **"+remaining[0]+" hours "+remaining[1]+" minutes** to grow")
+                                                else:
+                                                    await message.channel.send(message.author.mention+" You don't have enough pots to grow more weed")
+                                            else:
+                                                await message.channel.send(message.author.mention+" You don't have enough lamps to grow more weed")
+                                        else:
+                                            await message.channel.send(message.author.mention+" You don't have enough space to grow more weed")
+                                    else:
+                                        await message.channel.send(message.author.mention+" You don't own a "+command[target+2])
+                                else:
+                                    await message.channel.send(message.author.mention+" Please specify a valid place to grow the weed in (`house`/`warehouse`)")
+                            else:
+                                await message.channel.send(message.author.mention+" There are no seeds named `"+command[target+1]+"`")
+                        else:
+                            await message.channel.send(message.author.mention+" Please use `"+self.prefix+"grow grow <SEED_ID> <HOUSE/WAREHOUSE> <AMOUNT (optional)>`")
+                    elif command[target] == "harvest":
+                        user = str(message.author.id)
+                        name = str(message.author.name)
+                        packageSize = 0
+                        collectedPlants = []
+                        for plant in self.database["user"][user]["growing"]:
+                            if plant["growTime"] < time():
+                                if plant["seeds"] == "indica":
+                                    packageSize += 30
+                                else:
+                                    packageSize += 20
+                                collectedPlants.append(plant)
+                        for plant in collectedPlants:
+                            del self.database["user"][user]["growing"][self.database["user"][user]["growing"].index(plant)]
+                        if packageSize > 0:
+                            if "weed" in self.database["user"][user]["drugs"]["pure"]:
+                                self.database["user"][user]["drugs"]["pure"]["weed"] += packageSize
+                            else:
+                                self.database["user"][user]["drugs"]["pure"]["weed"] = packageSize
+                            await message.channel.send(message.author.mention+" You collected "+str(packageSize)+" grams of weed")
+                        else:
+                            await message.channel.send(message.author.mention+" Your weed hasn't fully grown yet")
+                    else:
+                        await message.channel.send(message.author.mention+" Please use `"+self.prefix+"grow <@USER (optional)> <ACTION>`\nGrow actions: *info*/*grow*/*harvest*")
+                else:
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"grow <@USER (optional)> <ACTION>`\nGrow actions: *info*/*grow*/*harvest*")
+            elif command[0] in ["electricity", "bill", "bills", "tax", "taxes", "elec", "elec"]:
                 user = str(message.author.id)
                 name = str(message.author.name)
                 if len(message.mentions) > 0:
                     user = str(message.mentions[0].id)
                     name = str(message.mentions[0].name)
-                if len(command) >= 2:
-                    pass
-                else:
-                    embed = discord.Embed(title="Grow Menu", color=discord.Color.green())
-                    capacity = self.database["user"][user]["house"]["size"]
-                    if self.database["user"][user]["warehouse"] != None:
-                        capacity += self.database["user"][user]["warehouse"]["size"]
-                    growing, grown = 0, 0
-                    for plant in self.database["user"][user]["growing"]:
-                        if plant["growTime"] < time():
-                            grown += 1
-                        else:
-                            growing += 1
-                    embed.add_field(name=":potted_plant: **Currently Growing**", value="Growing `"+str(growing)+"` out of `"+str(capacity)+"` plants")
-                    embed.add_field(name=":potted_plant: **Harvestable**", value="There are `"+str(grown)+"` harvestable plants")
-                    embed.set_thumbnail(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpsdlearning.com%2Fwp-content%2Fuploads%2F2017%2F09%2FCannabis-logo.jpg&f=1&nofb=1")
-                    await message.channel.send(embed=embed)
+                remaining = str(datetime.timedelta(seconds=(self.database["user"][user]["lastBill"]+86400)-round(time()))).split(":")
+                for i in range(len(remaining)):
+                    if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                        remaining[i] = remaining[i][1:]
+                embed = discord.Embed(title=name+"'s Electricity Bills", description="Next bill will be automaticly payed in "+remaining[0]+" hours "+remaining[1]+" minutes", color=discord.Color.from_rgb(93, 109, 126))
+                embed.add_field(name=":electric_plug: Estimated Payment", value=str(self.database["user"][user]["electricity"]*self.electricityMultiplayer)+" "+self.currency)
+                await message.channel.send(embed=embed)
 
 if __name__ == "__main__":
     client = MyClient()
     client.startup()
-    client.run("NzM1NDk1MTEyMjM4NTYzMzI4.XxhFMw.Wr4VmwFAHsFpArhKetC2wnKf34c", bot=True)
+    token = ""
+    if token == "":
+        if str(system()).lower() == "windows":
+            path = "C:\\Users\\lukas\\Documents\\PythonStuff\\Discord\\darkDealerToken.tk"
+        else:
+            path = "/Users/lukasoravec/Documents/Python Stuff/Random/darkDealerToken.tk"
+        f = open(path, 'r')
+        token = f.read()
+        f.close()
+    client.run(token, bot=True)
     client.saveDB()
