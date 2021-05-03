@@ -4,12 +4,9 @@ from platform import system
 from math import *
 
 # TODO LIST
-# Player transfer items/money
 # Gambling
 # Police
 # Items can break
-
-# Improve selling/deals/market (add quality so user can specify)
 
 # !!! Use .pop('key') !!!
 
