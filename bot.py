@@ -4,6 +4,7 @@ from platform import system
 from math import *
 
 # TODO LIST
+# Fix electricity
 # Gambling
 # Police
 # Items can break
@@ -57,7 +58,8 @@ class MyClient(discord.Client):
                 {"type":"Small warehouse", "name":"Abadoned warehouse", "size":20, "electricity":0.2, "price":100000, "id":"smallwarehouse"},
                 {"type":"Medium warehouse", "name":"A regular warehouse", "size":100, "electricity":0.15, "price":750000, "id":"mediumwarehouse"},
                 {"type":"Large warehouse", "name":"A nice big place to grow stuff", "size":250, "electricity":0.15, "price":1500000, "id":"largewarehouse"},
-                {"type":"Mega warehouse", "name":"Now this is a warehouse!", "size":500, "electricity":0.15, "price":4000000, "id":"megawarehouse"}],
+                {"type":"Mega warehouse", "name":"Now this is a warehouse!", "size":500, "electricity":0.15, "price":4000000, "id":"megawarehouse"},
+                {"type":"Sebko warehouse", "name":"This is a warehouse owned only by sebko himself!", "size":50000, "electricity":0.20, "price":10000000, "id":"sebkowarehouse"}],
             "lab":[
                 {"type":"Small lab", "name":"Friend's kitchen", "size":4, "electricity":0.35, "price":15000, "id":"smalllab"},
                 {"type":"Medium lab", "name":"Normal chemical lab", "size":10, "electricity":0.3, "price":75000, "id":"mediumlab"},
@@ -361,7 +363,7 @@ class MyClient(discord.Client):
                 name = message.author.name
                 page = 1
                 if len(message.mentions) > 0:
-                    user = str(message.mention[0].id)
+                    user = str(message.mentions[0].id)
                     name = message.mentions[0].name
                     if len(command) > 2:
                         try:
@@ -695,9 +697,10 @@ class MyClient(discord.Client):
                                             if produceAmount <= freeCapacity:
                                                 boost = self.cooldowns["labBoost"]*self.database["user"][user]["upgrades"]["lab"]
                                                 targetTime = self.producmentTime[powder]+time()-boost
-                                                elec = 1*round((self.producmentTime[powder]-boost)/60/60)
+                                                elec = 1*round((self.producmentTime[powder]-boost)/60)
                                                 self.database["user"][user]["electricity"] += elec
-                                                self.database["user"][user]["producing"].append({"drug":powder, "reward":self.produceReward[powder], "prodTime":targetTime})
+                                                for _ in range(produceAmount):
+                                                    self.database["user"][user]["producing"].append({"drug":powder, "reward":self.produceReward[powder], "prodTime":targetTime})
                                                 self.database["user"][user]["inventory"]["items"][powder] -= powderAmount
                                                 if self.database["user"][user]["inventory"]["items"][powder] == 0:
                                                     self.database["user"][user]["inventory"]["items"].pop(powder)
@@ -886,7 +889,7 @@ class MyClient(discord.Client):
                         await message.channel.send(message.author.mention+" Either you don't have that drug or it does not exist")
                 else:
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"quicksell <DRUG_ID> <AMOUNT>`")
-            elif command[0] in ["deals", "deallist"]:
+            elif command[0] in ["deals", "deallist", "trades", "tradelist"]:
                 user = str(message.author.id)
                 name = message.author.name
                 embed = discord.Embed(title=name+"'s Deals", color=discord.Color.dark_green())
@@ -896,7 +899,7 @@ class MyClient(discord.Client):
                     embed.add_field(name=str(i)+". "+self.drugName[deal["drug"]]+" Deal", value="Minimum Quality: "+str(deal["quality"])+", Payment: "+str(round(self.sellPrice[deal["drug"]]/100*(deal["quality"]+25), 1))+" "+self.currency+" per gram", inline=False)
                 embed.set_footer(text="You can complete any offer with the command "+self.prefix+"deal <DEAL_NUMBER> <DRUG_AMOUNT>\nExample: "+self.prefix+"deal 1 10")
                 await message.channel.send(embed=embed)
-            elif command[0] in ["dealrefresh", "dealsrefresh", "newdeals", "newdeal"]:
+            elif command[0] in ["dealrefresh", "dealsrefresh", "newdeals", "newdeal", "newtrade", "newtrades", "refreshtrades", "tradesrefresh"]:
                 user = str(message.author.id)
                 name = message.author.name
                 if self.database["user"][user]["dealRefresh"]+self.cooldowns["dealRefresh"] < time():
@@ -909,7 +912,7 @@ class MyClient(discord.Client):
                         if remaining[i].startswith("0") and len(remaining[i]) != 1:
                             remaining[i] = remaining[i][1:]
                     await message.channel.send(message.author.mention+" You need to wait **"+str(remaining[0])+" hours and "+str(remaining[1])+" minutes** to refresh the deals again")
-            elif command[0] == "deal":
+            elif command[0] in ["deal", "trade"]:
                 if len(command) == 3:
                     user = str(message.author.id)
                     name = message.author.name
@@ -1086,6 +1089,37 @@ class MyClient(discord.Client):
                                 await message.channel.send(message.author.mention+" There is no trade with that ID")
                         else:
                             await message.channel.send(message.author.mention+" Please use `"+self.prefix+"market take <DEAL_ID>`")
+                    elif command[1] in ["remove", "delete", "del", "rm"]:
+                        if len(command) == 3:
+                            deal = None
+                            for drug in self.database["market"]:
+                                if drug != "usedIDs":
+                                    for d in self.database["market"][drug]:
+                                        if d["id"] == command[2]:
+                                            deal = d
+                                            break
+                                    if deal != None:
+                                        break
+                            if deal != None:
+                                if str(deal["author"]) == user:
+                                    del self.database["market"][deal["drug"]][self.database["market"][deal["drug"]].index(deal)]
+                                    if len(self.database["market"][deal["drug"]]) == 0:
+                                        self.database["market"].pop(deal["drug"])
+                                    del self.database["market"]["usedIDs"][self.database["market"]["usedIDs"].index(deal["id"])]
+                                    if deal["quality"] == 100:
+                                        if deal["drug"] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                            self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] += deal["amount"]
+                                        else:
+                                            self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] = deal["amount"]
+                                    else:
+                                        self.database["user"][user]["inventory"]["drugs"]["mixes"].append({"drug":deal["drug"], "quality":deal["quality"], "amount":deal["amount"], "icon":random.choice([":blue_square:", ":brown_square:", ":green_square:", ":orange_square:", ":red_square:", ":purple_square:", ":white_large_square:", ":yellow_square:", ":black_large_square:"])})
+                                    await message.channel.send(message.author.mention+" You have successfully removed your deal from the market")
+                                else:
+                                    await message.channel.send(message.author.mention+" You only can delete deals created by yourself")
+                            else:
+                                await message.channel.send(message.author.mention+" There is no deal with that ID")
+                        else:
+                            await message.channel.send(message.author.mention+" Please use `"+self.prefix+"market remove <DEAL_ID>`")
                     else:
                         await message.channel.send(message.author.mention+" Please use `"+self.prefix+"market <ACTION> ...` actions: *make*/*take*")
             elif command[0] in ["give", "transfer", "share"]:
