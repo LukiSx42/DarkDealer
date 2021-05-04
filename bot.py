@@ -4,10 +4,6 @@ from platform import system
 from math import *
 
 # TODO LIST
-# Fix electricity
-# Gambling
-# Police
-# Items can break
 
 # !!! Use .pop('key') !!!
 
@@ -72,7 +68,7 @@ class MyClient(discord.Client):
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
         self.sellPrice = {"weed":10, "amp":10, "meth":12, "heroin":15, "cocaine":45}
-        self.cooldowns = {"dealRefresh":3600, "labBoost":120, "ruderalis":600, "indica":900}
+        self.cooldowns = {"dealRefresh":3600, "labBoost":120, "ruderalis":600, "indica":900, "police":300}
         self.electricityMultiplayer = 1.5
         print("BOT IS READY")
 
@@ -137,11 +133,23 @@ class MyClient(discord.Client):
             t = time()
             if str(message.author.id) not in self.database["user"]:
                 await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help`")
-                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time())}
+                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time()), "police":{"prison":False, "expire":round(time())}}
             if self.database["user"][str(message.author.id)]["lastBill"]+86400 < time():
                 self.database["user"][str(message.author.id)]["balance"] -= self.database["user"][str(message.author.id)]["electricity"]*self.electricityMultiplayer
                 self.database["user"][str(message.author.id)]["electricity"] = 0
                 self.database["user"][str(message.author.id)]["lastBill"] = round(time())
+            if self.database["user"][str(message.author.id)]["police"]["prison"]:
+                if self.database["user"][str(message.author.id)]["police"]["expire"] < time():
+                    await message.channel.send(message.author.mention+" You ware just released from prison, be careful next time...")
+                else:
+                    remaining = str(datetime.timedelta(seconds=round(self.database["user"][str(message.author.id)]["police"]["expire"]-time()))).split(":")
+                    for i in range(len(remaining)):
+                        if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                            remaining[i] = remaining[i][1:]
+                    embed = discord.Embed(title="Prison", description="**"+message.author.name+" you ware caught selling/holding drugs!**\n\n**Released in:** "+str(remaining[0])+" hours and "+str(remaining[1])+" minutes", color=discord.Color.blue())
+                    embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Patch_of_the_New_York_City_Police_Department.svg/1200px-Patch_of_the_New_York_City_Police_Department.svg.png")
+                    await message.channel.send(embed=embed)
+                    return
             command = message.content.lower()[len(self.prefix):].split(" ")
             if command[0] == "ping":
                 await message.channel.send("Pong!")
@@ -533,7 +541,7 @@ class MyClient(discord.Client):
                                                             growTime = seedTime/speed
                                                             for _ in range(amount):
                                                                 self.database["user"][user]["growing"].append({"seeds":command[target+1], "growTime":round(time()+growTime), "lamp":lamp})
-                                                                self.database["user"][user]["electricity"] += round((watts/1000)*(growTime/60/60))
+                                                                self.database["user"][user]["electricity"] += round((watts/1000)*(growTime/60))
                                                             remaining = str(datetime.timedelta(seconds=growTime)).split(":")
                                                             for i in range(len(remaining)):
                                                                 if remaining[i].startswith("0") and len(remaining[i]) != 1:
@@ -569,8 +577,19 @@ class MyClient(discord.Client):
                                 else:
                                     packageSize += 20
                                 collectedPlants.append(plant)
+                        potBreaks = 0
                         for plant in collectedPlants:
                             del self.database["user"][user]["growing"][self.database["user"][user]["growing"].index(plant)]
+                            potBreak = random.randint(1, 100)
+                            if potBreak == 100:
+                                self.database["user"][user]["inventory"]["items"]["pot"] -= 1
+                                if self.database["user"][user]["inventory"]["items"]["pot"] <= 0:
+                                    self.database["user"][user]["inventory"]["items"].pop("pot")
+                                potBreaks += 1
+                        if potBreaks == 1:
+                            await message.channel.send(message.author.mention+" Your **pot broke** while harvesting weed!")
+                        elif potBreaks > 1:
+                            await message.channel.send(message.author.mention+" Your **"+str(potBreaks)+"x pots broke** while harvesting weed!")
                         if packageSize > 0:
                             if "wetweed" in self.database["user"][user]["inventory"]["drugs"]["pure"]:
                                 self.database["user"][user]["inventory"]["drugs"]["pure"]["wetweed"] += packageSize
@@ -592,7 +611,7 @@ class MyClient(discord.Client):
                                 base = self.database["user"][user]["inventory"]["drugs"]["pure"]["wetweed"]
                                 bonus = 0
                                 if dryer:
-                                    self.database["user"][user]["electricity"] += 5
+                                    self.database["user"][user]["electricity"] += 3
                                     bonus = round(weed/5)
                                     weed += bonus
                                 if "weed" in self.database["user"][user]["inventory"]["drugs"]["pure"]:
@@ -600,7 +619,14 @@ class MyClient(discord.Client):
                                 else:
                                     self.database["user"][user]["inventory"]["drugs"]["pure"]["weed"] = weed
                                 self.database["user"][user]["inventory"]["drugs"]["pure"].pop("wetweed")
-                                await message.channel.send(message.author.mention+" You dryed `"+str(base)+"` grams of weed into `"+str(weed)+"` grams with `"+str(bonus)+"` bonus grams (dryer)")
+                                dryerBreak = random.randint(1, 15)
+                                if dryerBreak == 15 and dryer:
+                                    self.database["user"][user]["inventory"]["items"]["dryer"] -= 1
+                                    if self.database["user"][user]["inventory"]["items"]["dryer"] <= 0:
+                                        self.database["user"][user]["inventory"]["items"].pop("dryer")
+                                    await message.channel.send(message.author.mention+" **Your dryer broke!**\nYou dryed `"+str(base)+"` grams of weed into `"+str(weed)+"` grams with `"+str(bonus)+"` bonus grams (dryer)")
+                                else:
+                                    await message.channel.send(message.author.mention+" You dryed `"+str(base)+"` grams of weed into `"+str(weed)+"` grams with `"+str(bonus)+"` bonus grams (dryer)")
                             else:
                                 await message.channel.send(message.author.mention+" You don't have any wet weed to dry")
                         else:
@@ -779,7 +805,14 @@ class MyClient(discord.Client):
                                                                 bonus = 5
                                                             quality += bonus
                                                         self.database["user"][user]["inventory"]["drugs"]["mixes"].append({"drug":drug, "quality":quality, "amount":substanceAmount+drugAmount, "icon":random.choice([":blue_square:", ":brown_square:", ":green_square:", ":orange_square:", ":red_square:", ":purple_square:", ":white_large_square:", ":yellow_square:", ":black_large_square:"])})
-                                                        await message.channel.send(message.author.mention+" You successfully mixed **"+self.drugName[drug].split(":")[-1].lower()+"** with **"+self.fullName[substance].split(":")[-1].lower()+"**, the mix **quality is "+str(quality)+"/100** ("+self.mixQuality(quality)+")")
+                                                        mixerBreak = random.randint(0, 10)
+                                                        if mixerBreak == 10:
+                                                            self.database["user"][user]["inventory"]["items"]["mixer"] -= 1
+                                                            if self.database["user"][user]["inventory"]["items"]["mixer"] == 0:
+                                                                self.database["user"][user]["inventory"]["items"].pop("mixer")
+                                                            await message.channel.send(message.author.mention+" **Your Mixer broke!**\nYou successfully mixed **"+self.drugName[drug].split(":")[-1].lower()+"** with **"+self.fullName[substance].split(":")[-1].lower()+"**, the mix **quality is "+str(quality)+"/100** ("+self.mixQuality(quality)+")")
+                                                        else:
+                                                            await message.channel.send(message.author.mention+" You successfully mixed **"+self.drugName[drug].split(":")[-1].lower()+"** with **"+self.fullName[substance].split(":")[-1].lower()+"**, the mix **quality is "+str(quality)+"/100** ("+self.mixQuality(quality)+")")
                                                     else:
                                                         await message.channel.send(message.author.mention+" You need more than 0 grams")
                                                 else:
@@ -868,7 +901,15 @@ class MyClient(discord.Client):
                                 if self.database["user"][user]["inventory"]["drugs"]["pure"][command[1]] == 0:
                                     self.database["user"][user]["inventory"]["drugs"]["pure"].pop(command[1])
                                 self.database["user"][user]["balance"] += price
-                                await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                police = random.randint(1, 20)
+                                if police < 15:
+                                    await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                elif police < 20:
+                                    await message.channel.send(message.author.mention+" You almost got caught by the cops, but you have successfully sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                else:
+                                    await message.channel.send(message.author.mention+" You got CAUGHT by the COPS! You will be put into prison! Also you have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                    self.database["user"][user]["police"]["prison"] = True
+                                    self.database["user"][user]["police"]["expire"] = time()+self.cooldowns["police"]
                             else:
                                 await message.channel.send(message.author.mention+" You don't have that much"+self.drugName[command[1]].split(":")[-1].lower())
                         else:
@@ -882,7 +923,15 @@ class MyClient(discord.Client):
                                 else:
                                     self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]["amount"] -= amount
                                 self.database["user"][user]["balance"] += price
-                                await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                police = random.randint(1, 20)
+                                if police < 15:
+                                    await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                elif police < 20:
+                                    await message.channel.send(message.author.mention+" You almost got caught by the cops, but you have successfully sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                else:
+                                    await message.channel.send(message.author.mention+" You got CAUGHT by the COPS! You will be put into prison! Also you have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                    self.database["user"][user]["police"]["prison"] = True
+                                    self.database["user"][user]["police"]["expire"] = time()+self.cooldowns["police"]
                             else:
                                 await message.channel.send(message.author.mention+" You don't have that much"+self.drugName[command[1]].split(":")[-1].lower())
                     else:
@@ -1167,6 +1216,36 @@ class MyClient(discord.Client):
                         await message.channel.send(message.author.mention+" You don't have that item")
                 else:
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"gift <@MENTION> <ITEM> <AMOUNT>`")
+            elif command[0] in ["gamble", "bet", "risk"]:
+                if len(command) == 2:
+                    user = str(message.author.id)
+                    name = message.author.name
+                    try:
+                        amount = int(command[1])
+                    except:
+                        await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"bet <AMOUNT>`")
+                        return
+                    if self.database["user"][user]["balance"] >= amount:
+                        self.database["user"][user]["balance"] -= amount
+                        r = random.randint(1, 50)
+                        embed = discord.Embed()
+                        embed.set_author(name=name+"'s Gambling Game", icon_url=message.author.avatar_url)
+                        if r > 25:
+                            embed.color = discord.Color.green()
+                            self.database["user"][user]["balance"] += amount
+                            embed.description = "You have won **"+str(amount)+" "+self.currency+"**\n\n**Your new balance:** "+str(self.database["user"][user]["balance"])+" "+self.currency+"\n**Number rolled:** `"+str(r)+"`"
+                        elif r == 25:
+                            embed.color = discord.Color.orange()
+                            self.database["user"][user]["balance"] += amount*10
+                            embed.description = "JACKPOT! You have won **"+str(amount*10)+" "+self.currency+"**\n\n**Your new balance:** "+str(self.database["user"][user]["balance"])+" "+self.currency+"\n**Number rolled:** `"+str(r)+"`"
+                        else:
+                            embed.color = discord.Color.red()
+                            embed.description = "You have lost **"+str(amount)+" "+self.currency+"**\n\n**Your new balance:** "+str(self.database["user"][user]["balance"])+" "+self.currency+"\n**Number rolled:** `"+str(r)+"`"
+                        await message.channel.send(embed=embed)
+                    else:
+                        await message.channel.send(message.author.mention+" You don't have that much money")
+                else:
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"bet <AMOUNT>`")
 
 if __name__ == "__main__":
     client = MyClient()
