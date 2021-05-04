@@ -4,8 +4,7 @@ from platform import system
 from math import *
 
 # TODO LIST
-
-# !!! Use .pop('key') !!!
+# Crypto Market
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -29,6 +28,8 @@ class MyClient(discord.Client):
         self.prefix = "."
         self.currency = "$"
         self.databasePath = os.path.join(os.getcwd(), "database.json")
+        self.autosaveInterval = 1800
+        self.lastSave = time()
         self.database = self.loadDB()
         self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder", "mixer":":sake: Mixer", "wash":":soap: Washing Powder", "soda":":fog: Baking Soda", "sugar":":ice_cube: Sugar"}
         self.drugName = {"wetweed":":shamrock: Wet Weed", "weed":":herb: Weed", "meth":":cloud: Crystal Meth", "cocaine":":cloud: Cocaine", "heroin":":cloud: Herion", "amp":":cloud: Amphetamine", "sugar":":ice_cube: Sugar"}
@@ -150,6 +151,9 @@ class MyClient(discord.Client):
                     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Patch_of_the_New_York_City_Police_Department.svg/1200px-Patch_of_the_New_York_City_Police_Department.svg.png")
                     await message.channel.send(embed=embed)
                     return
+            if self.lastSave+self.autosaveInterval < time():
+                self.saveDB()
+                self.lastSave = time()
             command = message.content.lower()[len(self.prefix):].split(" ")
             if command[0] == "ping":
                 await message.channel.send("Pong!")
