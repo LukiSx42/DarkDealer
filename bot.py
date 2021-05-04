@@ -69,7 +69,7 @@ class MyClient(discord.Client):
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
         self.sellPrice = {"weed":10, "amp":10, "meth":12, "heroin":15, "cocaine":45}
-        self.cooldowns = {"dealRefresh":3600, "labBoost":120, "ruderalis":600, "indica":900, "police":300}
+        self.cooldowns = {"dealRefresh":900, "labBoost":120, "ruderalis":600, "indica":900, "police":300}
         self.electricityMultiplayer = 1.5
         print("BOT IS READY")
 
@@ -370,6 +370,34 @@ class MyClient(discord.Client):
                             await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                     else:
                         await message.channel.send(message.author.mention+" That item/building does not exist, use `.shop <SHOP_ID>` to see all available items and buildings")
+            elif command[0] == "sell":
+                if len(command) == 2 or len(command) == 3:
+                    user = str(message.author.id)
+                    amount = 1
+                    if len(command) == 3:
+                        try:
+                            if amount != "max":
+                                amount = int(command[2])
+                        except:
+                            await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"sell <ITEM_ID> <AMOUNT>")
+                    if command[1] in self.prices:
+                        if command[1] in self.database["user"][user]["inventory"]["items"]:
+                            if amount == "max":
+                                amount = self.database["user"][user]["inventory"]["items"][command[1]]
+                            if self.database["user"][user]["inventory"]["items"][command[1]] >= amount:
+                                self.database["user"][user]["inventory"]["items"][command[1]] -= amount
+                                if self.database["user"][user]["inventory"]["items"][command[1]] == 0:
+                                    self.database["user"][user]["inventory"]["items"].pop(command[1])
+                                self.database["user"][user]["balance"] += round((self.prices[command[1]]/2)*amount)
+                                await message.channel.send(message.author.mention+" You have sold **"+str(amount)+"x "+str(self.fullName[command[1]].split(":")[-1][1:].lower())+"** for **"+str(round((self.prices[command[1]]/2)*amount))+" "+self.currency+"**")
+                            else:
+                                await message.channel.send(message.author.mention+" You don't have that many of these items")
+                        else:
+                            await message.channel.send(message.author.mention+" You don't own that item")
+                    else:
+                        await message.channel.send(message.author.mention+" That item does not exist")
+                else:
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"sell <ITEM_ID>")
             elif command[0] in ["inv", "inventory", "items"]:
                 user = str(message.author.id)
                 name = message.author.name
@@ -469,7 +497,7 @@ class MyClient(discord.Client):
                     target = 2
                 if (len(command) >= 3 and len(message.mentions) > 0) or (len(command) >= 2 and len(message.mentions) == 0):
                     embed = discord.Embed(title="Grow Menu", color=discord.Color.green())
-                    embed.set_thumbnail(url="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpsdlearning.com%2Fwp-content%2Fuploads%2F2017%2F09%2FCannabis-logo.jpg&f=1&nofb=1")
+                    embed.set_thumbnail(url="https://media.wired.com/photos/5c1840ae9fe42d6b6e532fbb/1:1/w_1200,h_1200,c_limit/weed_dark-featured-570715425.jpg")
                     if command[target] == "info":
                         capacity = self.database["user"][user]["house"]["size"]
                         if self.database["user"][user]["warehouse"] != None:
@@ -973,7 +1001,7 @@ class MyClient(discord.Client):
                         dealNumber = int(command[1])
                         amount = int(command[2])
                     except:
-                        await message.channel.send(message.author.id+" Invalid number, please use `"+self.prefix+"deal <DEAL_NUMBER> <AMOUNT>`")
+                        await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"deal <DEAL_NUMBER> <AMOUNT>`")
                         return
                     deal = self.database["user"][user]["deals"][dealNumber-1]
                     iMix = None
@@ -1236,11 +1264,11 @@ class MyClient(discord.Client):
                         embed.set_author(name=name+"'s Gambling Game", icon_url=message.author.avatar_url)
                         if r > 25:
                             embed.color = discord.Color.green()
-                            self.database["user"][user]["balance"] += amount
+                            self.database["user"][user]["balance"] += amount*2
                             embed.description = "You have won **"+str(amount)+" "+self.currency+"**\n\n**Your new balance:** "+str(self.database["user"][user]["balance"])+" "+self.currency+"\n**Number rolled:** `"+str(r)+"`"
                         elif r == 25:
                             embed.color = discord.Color.orange()
-                            self.database["user"][user]["balance"] += amount*10
+                            self.database["user"][user]["balance"] += amount*11
                             embed.description = "JACKPOT! You have won **"+str(amount*10)+" "+self.currency+"**\n\n**Your new balance:** "+str(self.database["user"][user]["balance"])+" "+self.currency+"\n**Number rolled:** `"+str(r)+"`"
                         else:
                             embed.color = discord.Color.red()
