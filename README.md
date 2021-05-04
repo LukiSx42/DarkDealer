@@ -1,5 +1,5 @@
-# Dark Dealer DEVELOPMENT VERSION
-**IMPORTANT:** This is a development version of the dark dealer, the code here probably wont even run (because it is in development), this branch is mainly used by devs, but still kept public
+# Dark Dealer BETA VERSION
+**IMPORTANT:** This is the first ever release of Dark Dealer, this is a beta vesrion (v1.0) with a lot of unknown bugs.
 
 ## Basic info
 
