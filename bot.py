@@ -31,12 +31,14 @@ class MyClient(discord.Client):
         self.autosaveInterval = 1800
         self.lastSave = time()
         self.database = self.loadDB()
-        self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder", "mixer":":sake: Mixer", "wash":":soap: Washing Powder", "soda":":fog: Baking Soda", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "grape":":grapes: Grape Sugar"}
+        self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder", "mixer":":sake: Mixer", "wash":":soap: Washing Powder", "soda":":fog: Baking Soda", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "grape":":grapes: Grape Sugar", "gun":":gun: Gun", "a11":":hammer_pick: A11", "a10":":hammer_pick: A10", "a9":":hammer_pick: A9", ":pick: 3090rig":":pick: 3090rig", "3080rig":":pick: 3080rig", "3070rig":":pick: 3070rig", "2080rig":":pick: 2080rig", "2070rig":":pick: 2070rig"}
         self.drugName = {"wetweed":":shamrock: Wet Weed", "weed":":herb: Weed", "meth":":cloud: Crystal Meth", "cocaine":":cloud: Cocaine", "heroin":":cloud: Herion", "amp":":cloud: Amphetamine", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "mdma":":pill: Ecstasy"}
-        self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A better way to dry weed, gives you 20% more weed. (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)", "mixer":"Needed to mix drugs. (id => `mixer`)", "sugar":"Used to mix drugs with. (id => `sugar`)", "wash":"Used to mix drugs with. (id => `wash`)", "soda":"Used to mix drugs with. (id => `soda`)", "amf":"1g amfetamin ==> 5g mdma (id => `amf`)", "grape":"Needed to produce MDMA (id => `grape`)"}
+        self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A better way to dry weed, gives you 20% more weed. (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)", "mixer":"Needed to mix drugs. (id => `mixer`)", "sugar":"Used to mix drugs with. (id => `sugar`)", "wash":"Used to mix drugs with. (id => `wash`)", "soda":"Used to mix drugs with. (id => `soda`)", "amf":"1g amfetamin ==> 5g mdma (id => `amf`)", "grape":"Needed to produce MDMA (id => `grape`)", "gun":"You can rob with this thing (id => `gun`)", "a11":"You can mine bitcoin with this. (id => `a11`)", "a10":"You can mine bitcoin with this. (id => `a10`)", "a9":"You can mine bitcoin with this. (id => `a9`)", "3090rig":"You can mine ethereum with this. (id => `3090rig`)", "3080rig":"You can mine ethereum with this. (id => `3080rig`)", "3070rig":"You can mine ethereum with this. (id => `3070rig`)", "2080rig":"You can mine ethereum with this. (id => `2080rig`)", "2070rig":"You can mine ethereum with this. (id => `2070rig`)"}
         self.drugDescription = {"wetweed":"You need to dry wet weed to turn it into sellable weed", "weed":"The green stuff", "meth":"White powder with good effects", "cocaine":"The most expensive drug", "heroin":"The more serious drug", "amp":"So you wanna be fast?", "mdma":"Relaxing pills"}
         self.drugLvls = {"1":["weed", "amp"], "10":["mdma", "meth"], "25":["cocaine", "heroin"]}
-        self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":30, "cocaine":50, "heroin":20, "amp":20, "lab1":15000, "lab2":75000, "lab3":500000, "mixer":5000, "soda":7, "wash":2, "sugar":5, "amf":25}
+        self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":30, "cocaine":50, "heroin":20, "amp":20, "lab1":15000, "lab2":75000, "lab3":500000, "mixer":5000, "soda":7, "wash":2, "sugar":5, "amf":25, "gun":1000, "a11":20000, "a10":15000, "a9":10000, "3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000}
+        self.miners = {"asic":{"a11":20000, "a10":15000, "a9":10000}, "gpu":{"3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000}}
+        self.hashRate = {"a11":5000, "a10":3500, "a9":1500, "3090rig":10000, "3080rig":7500, "3070rig":6000, "2080rig":5000, "2070rig":3500}
         self.producmentTime = {"meth":540, "cocaine":1200, "herion":660, "amp":600, "mdma":600}
         self.produceReward = {"meth":4, "cocaine":3, "herion":4, "amp":5, "mdma":5}
         self.substances = {"soda":10, "wash":0, "sugar":5}
@@ -71,7 +73,7 @@ class MyClient(discord.Client):
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
         self.sellPrice = {"weed":10, "amp":10, "meth":12, "heroin":15, "cocaine":45}
-        self.cooldowns = {"dealRefresh":900, "labBoost":120, "ruderalis":600, "indica":900, "police":300}
+        self.cooldowns = {"dealRefresh":900, "labBoost":120, "ruderalis":600, "indica":900, "police":300, "heist":600}
         self.cryptoName = {"BTC":"Bitcoin", "ETH":"Ethereum", "LTC":"Litecoin", "DOGE":"Dogecoin"}
         self.cryptos = ["BTC", "ETH", "LTC", "DOGE"]
         self.electricityMultiplayer = 1.5
@@ -80,7 +82,7 @@ class MyClient(discord.Client):
     def loadDB(self):
         if not os.path.exists(self.databasePath):
             print("Database not found, creating a new one...")
-            database = {"user":{}, "market":{"usedIDs":[]}}
+            database = {"user":{}, "market":{"usedIDs":[]}, "heists":{}}
             f = open(self.databasePath, 'w')
             f.write(json.dumps(database, sort_keys=True, indent=4))
             f.close()
@@ -138,7 +140,7 @@ class MyClient(discord.Client):
             t = time()
             if str(message.author.id) not in self.database["user"]:
                 await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help`")
-                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time()), "police":{"prison":False, "expire":round(time())}, "crypto":{}}
+                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time()), "police":{"prison":False, "expire":round(time())}, "crypto":{}, "lastHeist":0, "mining":[]}
             if self.database["user"][str(message.author.id)]["lastBill"]+86400 < time():
                 self.database["user"][str(message.author.id)]["balance"] -= self.database["user"][str(message.author.id)]["electricity"]*self.electricityMultiplayer
                 self.database["user"][str(message.author.id)]["electricity"] = 0
@@ -176,7 +178,7 @@ class MyClient(discord.Client):
                         embed.add_field(name=":mag_right: Producing Powder Drugs", value="To produce powder drugs, firstly you need a lab starting from 15k. Then you need some powder to produce the drug from. Lastly you need to produce the drug this takes 2 IRL days without any upgrades. You can list all upgrades with the command `"+self.prefix+"upgrades <BUILDING>` then buy them with the command `"+self.prefix+"upgrade <BUILDING> <UPGRADE_LVL>`", inline=False)
                         embed.add_field(name=":dollar: Selling Drugs", value="So, selling the good stuff isn't that hard as it seems, BUT the police might be interested in participating in the deal aswell so be careful who and how you sell it to... There are 3 ways of selling drugs:\n 1. Qucksell - qucksell is the easiest and fastest method of selling drugs, but you dont make as much money here and also police are interested in investigating quicksells.\n 2. Market - On the market there are 2 ways of selling stuff: 1. Market making - you will create an player only or NPC only or both offer, it will take time before an NPC or an another player buys it (pricing will make a big difference here) 2. Market taking - You will see that some NPC's or other players are willing to buy a certain drug at certain price, you can easly fill the order and quckly finish the trade, but you will pay a 'Market taker fee' this is 5% of your profit, but there is NO police attetion when using the market.\n 3. Gang - Lastly selling to a gang is realy profitalbe sometimes, but realy risky...", inline=False)
                     elif command[1] in ["commands", "cmds"]:
-                        embed = discord.Embed(title="Dark Dealer Commands", description="`balance`, `shops`, `shop`, `buy`, `jobs`, `job`, `work`, `inventory`, `drugs`, `buildings`, `grow`, `bills`, `levelup`, `lab`", color=discord.Color.light_gray())
+                        embed = discord.Embed(title="Dark Dealer Commands", description="`balance`, `shops`, `shop`, `buy`, `jobs`, `job`, `work`, `inventory`, `drugs`, `buildings`, `grow`, `bills`, `levelup`, `lab`, `heist`, `levelup`, `bet`, `calcmix`, `mix`, `crypto`, `calccrypto`, `give`, `gift`, `startheist`, `joinheist`, `mine`", color=discord.Color.light_gray())
                         embed.set_footer(text="Use "+self.prefix+" before each command!")
                 await message.channel.send(embed=embed)
             elif command[0] in ["balance", "bal", "money"]:
@@ -264,6 +266,7 @@ class MyClient(discord.Client):
                 embed.add_field(name=":scientist: Science Needs", value="We sell high quality lab equpment. (id => `science`/`lab`)", inline=False)
                 embed.add_field(name=":mag_right: Power of Powder", value="We sell powder that can be turned into large amounts of powder drugs. (id => `powder`)", inline=False)
                 embed.add_field(name=":house: PrimeLocation", value="We sell great appartments, warehouses, labs... (id => `location`/`buildings`/`properties`)", inline=False)
+                embed.add_field(name=":pick: Miners Heaven", value="You can buy crypto miners here. (id => `miners`/`mine`)", inline=False)
                 embed.set_footer(text="You can visit any shop with "+self.prefix+"shop <SHOP_ID>")
                 await message.channel.send(embed=embed)
             elif command[0] == "shop":
@@ -277,6 +280,7 @@ class MyClient(discord.Client):
                         embed.add_field(name=":bulb: LED Lamp - "+self.nice_number(self.prices["led"])+" "+self.currency, value="Cheap and not power efficient lamp. (750W) (id => `led`)", inline=False)
                         embed.add_field(name=":bulb: HID Lamp - "+self.nice_number(self.prices["hid"])+" "+self.currency, value="High quality and power efficient lamp. (500W) (id => `hid`)", inline=False)
                         embed.add_field(name=":control_knobs: Electric Dryer - "+self.nice_number(self.prices["dryer"])+" "+self.currency, value="A better way to dry weed, gives you 20% more weed (id => `dryer`)", inline=False)
+                        embed.add_field(name=":gun: Gun - "+self.nice_number(self.prices["gun"])+" "+self.currency, value="You can rob with this thing. (id => `gun`)", inline=False)
                         embed.set_footer(text="You can buy stuff with "+self.prefix+"buy <ITEM_ID>")
                         await message.channel.send(embed=embed)
                     elif command[1] in ["science", "lab"]:
@@ -307,6 +311,17 @@ class MyClient(discord.Client):
                         embed.add_field(name=":cloud: Heroin Powder - "+self.nice_number(self.prices["heroin"])+" "+self.currency, value="1g powder ==> 4g herion (id => `heroin`)", inline=False)
                         embed.add_field(name=":cloud: Amfetamin - "+self.nice_number(self.prices["amf"])+" "+self.currency, value="1g amfetamin ==> 5g mdma (id => `amf`)", inline=False)
                         embed.set_footer(text="You can buy stuff with "+self.prefix+"buy <ITEM_ID> <AMOUNT (optional)>")
+                        await message.channel.send(embed=embed)
+                    elif command[1] in ["mine", "miners"]:
+                        embed = discord.Embed(title=":pick: Miners Heaven", color=discord.Color.dark_teal())
+                        embed.set_thumbnail(url="https://www.pngkit.com/png/full/19-198225_banner-transparent-bitcoin-miner-logo-karmashares-llc-bitcoin.png")
+                        for minerType in self.miners:
+                            for miner in self.miners[minerType]:
+                                if minerType == "asic":
+                                    embed.add_field(name=":hammer_pick: "+miner.upper()+" - "+self.nice_number(self.miners[minerType][miner])+" "+self.currency, value="You can mine bitcoin with this. (id => `"+miner+"`)", inline=False)
+                                else:
+                                    embed.add_field(name=":pick: "+miner+" - "+self.nice_number(self.miners[minerType][miner])+" "+self.currency, value="You can mine ethereum with this. (id => `"+miner+"`)", inline=False)
+                        embed.set_footer(text="You can buy miners with "+self.prefix+"buy <MINER_ID> <AMOUNT (optional)>")
                         await message.channel.send(embed=embed)
                     elif command[1] in ["location", "building", "buildings", "houses", "properties", "property", "prime", "primelocation"]:
                         embed = discord.Embed(title=":house: PrimeLocation", color=discord.Color.gold())
@@ -398,7 +413,7 @@ class MyClient(discord.Client):
                                     self.database["user"][user]["crypto"][crypto] += amount
                                 else:
                                     self.database["user"][user]["crypto"][crypto] = amount
-                                await message.channel.send(message.author.mention+" You invested `"+str(price)+" "+self.currency+"` into `"+crypto+"`")
+                                await message.channel.send(message.author.mention+" You invested `"+str(price)+" "+self.currency+"` into `"+crypto+"` at price `"+str(cryptoPrice)+"` per "+crypto)
                             else:
                                 await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                         else:
@@ -445,7 +460,7 @@ class MyClient(discord.Client):
                                 self.database["user"][user]["crypto"][crypto] -= amount
                                 if self.database["user"][user]["crypto"][crypto] <= 0:
                                     self.database["user"][user]["crypto"].pop(crypto)
-                                await message.channel.send(message.author.mention+" You have sold **"+str(amount)+" "+crypto+"** for `"+str(price)+"`")
+                                await message.channel.send(message.author.mention+" You have sold **"+str(amount)+" "+crypto+"** for `"+str(price)+"` at price `"+str(cryptoPrice)+"` per "+crypto)
                             else:
                                 await message.channel.send(message.author.mention+" You don't have that much "+crypto)
                         else:
@@ -575,7 +590,7 @@ class MyClient(discord.Client):
                             if remaining[i].startswith("0") and len(remaining[i]) != 1:
                                 remaining[i] = remaining[i][1:]
                         embed.add_field(name=":potted_plant: **Currently Growing**", value="Growing `"+str(growing)+"` out of `"+str(capacity)+"` plants", inline=False)
-                        embed.add_field(name=":potted_plant: **Top Growing**", value="You need to wait about "+remaining[0]+" hours and "+remaining[1]+" minutes before your next plant grows", inline=False)
+                        embed.add_field(name=":potted_plant: **Top Growing**", value="You need to wait about **"+remaining[1]+" minutes and "+remaining[2]+" seconds** before your next plant grows", inline=False)
                         embed.add_field(name=":potted_plant: **Harvestable**", value="There are `"+str(grown)+"` harvestable plants", inline=False)
                         await message.channel.send(embed=embed)
                     elif command[target] == "grow":
@@ -602,14 +617,14 @@ class MyClient(discord.Client):
                                                 lamps.append(plant["lamp"])
                                                 pots += 1
                                             if "hid" in self.database["user"][user]["inventory"]["items"]:
-                                                if self.database["user"][user]["inventory"]["items"]["hid"] > lamps.count("hid"):
+                                                if self.database["user"][user]["inventory"]["items"]["hid"] >= lamps.count("hid")+amount:
                                                     lamp = "hid"
                                             if lamp == None:
                                                 if "led" in self.database["user"][user]["inventory"]["items"]:
-                                                    if self.database["user"][user]["inventory"]["items"]["led"] > lamps.count("led"):
+                                                    if self.database["user"][user]["inventory"]["items"]["led"] >= lamps.count("led")+amount:
                                                         lamp = "led"
                                             if "pot" in self.database["user"][user]["inventory"]["items"]:
-                                                if self.database["user"][user]["inventory"]["items"]["pot"] > pots:
+                                                if self.database["user"][user]["inventory"]["items"]["pot"] >= pots+amount:
                                                     pot = True
                                             if command[target+1] in self.database["user"][user]["inventory"]["items"]:
                                                 if self.database["user"][user]["inventory"]["items"][command[target+1]] >= amount:
@@ -1407,6 +1422,215 @@ class MyClient(discord.Client):
                         await message.channel.send(message.author.mention+" That crypto does not exist")
                 else:
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"crypto <CRYPTO_ID>`")
+            elif command[0] in ["heist", "rob", "steal"]:
+                if len(command) == 3:
+                    user = str(message.author.id)
+                    place = command[1]
+                    if "gun" in self.database["user"][user]["inventory"]["items"]:
+                        if place in ["bank", "shop"]:
+                            if user not in self.database["heists"]:
+                                if self.database["user"][user]["lastHeist"]+self.cooldowns["heist"] < time():
+                                    if command[2] == "solo":
+                                        if place == "shop":
+                                            caughtChance = 10
+                                            reward = random.randint(1000, 4000)
+                                        elif place == "bank":
+                                            reward = random.randint(2000, 10000)
+                                            caughtChance = 5
+                                        caught = random.randint(0, caughtChance)
+                                        if caught < caughtChance-round(caughtChance/3):
+                                            self.database["user"][user]["balance"] += reward
+                                            await message.channel.send(message.author.mention+" You have **successfully robbed** a **"+place+"** your reward is `"+str(reward)+" "+self.currency+"`, nice job!")
+                                        elif caught < caughtChance:
+                                            self.database["user"][user]["balance"] -= reward*3
+                                            await message.channel.send(message.author.mention+" Oh shit, you were **CAUGHT** while robbing a **"+place+"** your fine was `"+str(reward*3)+" "+self.currency+"`")
+                                        else:
+                                            self.database["user"][user]["inventory"]["items"]["gun"] -= 1
+                                            if self.database["user"][user]["inventory"]["items"]["gun"] <= 0:
+                                                self.database["user"][user]["inventory"]["items"].pop("gun")
+                                            await message.channel.send(message.author.mention+" Oh shit, you were **CAUGHT BIG TIME** while robbing a **"+place+"** you are going to **JAIL**, and they have taken your gun too...")
+                                            self.database["user"][user]["police"]["prison"] = True
+                                            self.database["user"][user]["police"]["expire"] = round(time()+(self.cooldowns["heist"]/2))
+                                        self.database["user"][user]["lastHeist"] = round(time())
+                                    else:
+                                        t = round(self.database["user"][user]["lastHeist"]+self.cooldowns["heist"]-time())
+                                        remaining = str(datetime.timedelta(seconds=t)).split(":")
+                                        for i in range(len(remaining)):
+                                            if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                                remaining[i] = remaining[i][1:]
+                                        await message.channel.send(message.author.mention+" You need to wait **"+remaining[1]+" minutes and "+remaining[2]+" seconds** before participating in a heist again")
+                                elif command[2] == "team":
+                                    self.database["heists"][user] = {"robbers":[user], "place":place}
+                                    await message.channel.send(message.author.mention+" Is robbing a **"+place+"**, join them with the command `"+self.prefix+"joinheist <@MENTION>`\nYou can start the heist anytime, just use `.startheist`")
+                                else:
+                                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"rob <PLACE> <TEAM/SOLO>`")
+                            else:
+                                await message.channel.send(message.author.mention+" You are already in a heist")
+                        else:
+                            await message.channel.send(message.author.mention+" You only can rob **shops** or **banks**")
+                    else:
+                        await message.channel.send(message.author.mention+" You need a **gun** in order to rob")
+                else:
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"rob <PLACE> <TEAM/SOLO>`\nPlace: *bank*/*shop*")
+            elif command[0] in ["joinheist", "heistjoin"]:
+                if len(message.mentions) > 0:
+                    user = str(message.author.id)
+                    if "gun" in self.database["user"][user]["inventory"]["items"]:
+                        if str(message.mentions[0].id) in self.database["heists"]:
+                            if user not in self.database["heists"]:
+                                if self.database["user"][user]["lastHeist"]+self.cooldowns["heist"] < time():
+                                    self.database["heists"][str(message.mentions[0].id)]["robbers"].append(user)
+                                    await message.channel.send(message.author.mention+" You **successfully joined "+message.mentions[0].name+"'s** heist")
+                                else:
+                                    t = round(self.database["user"][user]["lastHeist"]+self.cooldowns["heist"]-time())
+                                    remaining = str(datetime.timedelta(seconds=t)).split(":")
+                                    for i in range(len(remaining)):
+                                        if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                            remaining[i] = remaining[i][1:]
+                                    await message.channel.send(message.author.mention+" You need to wait **"+remaining[1]+" minutes and "+remaining[2]+" seconds** before participating in a heist again")
+                            else:
+                                await message.channel.send(message.author.mention+" You are already in a heist")
+                        else:
+                            await message.channel.send(message.author.mention+" **"+message.mentions[0].name+"** currently has no planed team heists")
+                    else:
+                        await message.channel.send(message.author.mention+" You need a **gun** in order to rob")
+                else:
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"joinheist <@MENTION>`")
+            elif command[0] in ["startheist", "heiststart"]:
+                user = str(message.author.id)
+                if user in self.database["heists"]:
+                    if self.database["heists"][user]["place"] == "shop":
+                        caughtChance = 10
+                        reward = random.randint(1000, 4000)
+                    else:
+                        reward = random.randint(2000, 10000)
+                        caughtChance = 5
+                    if len(self.database["heists"][user]["robbers"]) >= 2:
+                        caughtChance += 2
+                    info = ""
+                    for user in self.database["heists"][user]["robbers"]:
+                        caught = random.randint(0, caughtChance)
+                        if caught < caughtChance-round(caughtChance/3):
+                            self.database["user"][user]["balance"] += reward
+                            info += "<@"+user+"> You have **successfully robbed** a **"+place+"** your reward is `"+str(reward)+" "+self.currency+"`, nice job!\n"
+                        elif caught < caughtChance:
+                            self.database["user"][user]["balance"] -= reward*3
+                            info += "<@"+user+"> Oh shit, you were **CAUGHT** while robbing a **"+place+"** your fine was `"+str(reward*3)+" "+self.currency+"`\n"
+                        else:
+                            self.database["user"][user]["inventory"]["items"]["gun"] -= 1
+                            if self.database["user"][user]["inventory"]["items"]["gun"] <= 0:
+                                self.database["user"][user]["inventory"]["items"].pop("gun")
+                            info += "<@"+user+"> Oh shit, you were **CAUGHT BIG TIME** while robbing a **"+place+"** you are going to **JAIL**, and they have taken your gun too...\n"
+                            self.database["user"][user]["police"]["prison"] = True
+                            self.database["user"][user]["police"]["expire"] = round(time()+(self.cooldowns["heist"]/2))
+                        self.database["user"][user]["lastHeist"] = round(time())
+                    await message.channel.send(info)
+                else:
+                    await message.channel.send(message.author.mention+" You are not hosting any heists")
+            elif command[0] == "save":
+                if message.author.id == 151721375210536961:
+                    self.saveDB()
+                    await message.channel.send(message.author.mention+" Database saved")
+            elif command[0] in ["mine", "mineing", "mining"]:
+                if len(command) >= 2:
+                    user = str(message.author.id)
+                    if command[1] == "info":
+                        embed = discord.Embed(title="Mining Info", color=discord.Color.dark_teal())
+                        asicCount, btcMined, gpuCount, ethMined = 0, 0, 0, 0
+                        for miner in self.database["user"][user]["mining"]:
+                            if miner["name"].startswith("a"):
+                                asicCount += 1
+                                btcMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/1800000), 6)
+                            else:
+                                gpuCount += 1
+                                ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000), 6)
+                        embed.add_field(name=":hammer_pick: Asic miners ("+str(asicCount)+")", value="Your asic miners have earned "+str(btcMined)+" BTC", inline=False)
+                        embed.add_field(name=":pick: GPU miners ("+str(gpuCount)+")", value="Your GPU miners have earned "+str(ethMined)+" ETH", inline=False)
+                        await message.channel.send(embed=embed)
+                    elif command[1] == "add":
+                        if len(command) >= 3:
+                            amount = 1
+                            if len(command) >= 4:
+                                try:
+                                    amount = int(command[3])
+                                except:
+                                    await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"mine add <MINER_ID> <AMOUNT (optional)>`")
+                                    return
+                            miner = command[2]
+                            if miner in self.miners["asic"] or miner in self.miners["gpu"]:
+                                if miner in self.database["user"][user]["inventory"]["items"]:
+                                    if self.database["user"][user]["inventory"]["items"][miner] >= amount:
+                                        if self.database["user"][user]["house"]["size"]-len(self.database["user"][user]["mining"]) >= amount:
+                                            for _ in range(amount):
+                                                self.database["user"][user]["mining"].append({"name":miner, "lastCollected":round(time())})
+                                            self.database["user"][user]["inventory"]["items"][miner] -= amount
+                                            if self.database["user"][user]["inventory"]["items"][miner] <= 0:
+                                                self.database["user"][user]["inventory"]["items"].pop(miner)
+                                            await message.channel.send(message.author.mention+" You have **successfully installed** your miner at your house (`"+str(len(self.database["user"][user]["mining"]))+"`/`"+str(self.database["user"][user]["house"]["size"])+"`)")
+                                        else:
+                                            await message.channel.send(message.author.mention+" You don't have that much space in your house (`"+str(len(self.database["user"][user]["mining"]))+"`/`"+str(self.database["user"][user]["house"]["size"])+"`)")
+                                    else:
+                                        await message.channel.send(message.author.mention+" You don't have that many of these miners")
+                                else:
+                                    await message.channel.send(message.author.mention+" You don't own that miner")
+                            else:
+                                await message.channel.send(message.author.mention+" That's not a valid miner ID")
+                        else:
+                            await message.channel.send(message.author.mention+" Please specify an miner to add, `"+self.prefix+"mine add <MINER_ID> <AMOUNT (optional)>`")
+                    elif command[1] == "remove":
+                        amount = 1
+                        if len(command) >= 4:
+                            if len(command) == 4:
+                                try:
+                                    amount = int(command[3])
+                                except:
+                                    await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"mine remove <MINER_ID> <AMOUNT (optional)>`")
+                                    return
+                        minerName = command[2]
+                        if len(self.database["user"][user]["mining"]) >= amount:
+                            remove = []
+                            for miner in self.database["user"][user]["mining"]:
+                                if miner["name"] == minerName and len(remove) < amount:
+                                    remove.append(miner)
+                            for miner in remove:
+                                del self.database["user"][user]["mining"][self.database["user"][user]["mining"].index(miner)]
+                                if miner["name"] in self.database["user"][user]["inventory"]["items"]:
+                                    self.database["user"][user]["inventory"]["items"][miner["name"]] += 1
+                                else:
+                                    self.database["user"][user]["inventory"]["items"][miner["name"]] = 1
+                            if len(remove) > 0:
+                                await message.channel.send(message.author.mention+" `"+str(len(remove))+"x` miners were removed")
+                            else:
+                                await message.channel.send(message.author.mention+" There is no miner running with the model name `"+minerName+"`")
+                        else:
+                            await message.channel.send(message.author.mention+" You dont have that many miners running")
+                    elif command[1] == "collect":
+                        if len(self.database["user"][user]["mining"]) > 0:
+                            btcMined, ethMined, i = 0, 0, 0
+                            for miner in self.database["user"][user]["mining"]:
+                                if miner["name"].startswith("a"):
+                                    btcMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/1800000), 6)
+                                    self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/150)
+                                else:
+                                    ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000), 4)
+                                    self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/300)
+                                self.database["user"][user]["mining"][i]["lastCollected"] = round(time())
+                                i += 1
+                            if btcMined > 0:
+                                if "BTC" in self.database["user"][user]["crypto"]:
+                                    self.database["user"][user]["crypto"]["BTC"] += btcMined
+                                else:
+                                    self.database["user"][user]["crypto"]["BTC"] = btcMined
+                            if ethMined > 0:
+                                if "ETH" in self.database["user"][user]["crypto"]:
+                                    self.database["user"][user]["crypto"]["ETH"] += ethMined
+                                else:
+                                    self.database["user"][user]["crypto"]["ETH"] = ethMined
+                            await message.channel.send(message.author.mention+" You have collected `"+str(btcMined)+" BTC` and `"+str(ethMined)+" ETH`")
+                        else:
+                            await message.channel.send(message.author.mention+" You don't have any miners running")
+                else:
+                    await message.channel.send(message.author.mention+" Please specify an action (**info**/**add**/**remove**/**collect**)")
 
 if __name__ == "__main__":
     client = MyClient()
