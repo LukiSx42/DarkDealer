@@ -4,7 +4,7 @@ from platform import system
 from math import *
 
 # TODO LIST
-# Crypto Market
+# Redo growing plants database thing so bot = faster (big project)
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -31,17 +31,19 @@ class MyClient(discord.Client):
         self.autosaveInterval = 1800
         self.lastSave = time()
         self.database = self.loadDB()
-        self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder", "mixer":":sake: Mixer", "wash":":soap: Washing Powder", "soda":":fog: Baking Soda", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "grape":":grapes: Grape Sugar", "gun":":gun: Gun", "a11":":hammer_pick: A11", "a10":":hammer_pick: A10", "a9":":hammer_pick: A9", ":pick: 3090rig":":pick: 3090rig", "3080rig":":pick: 3080rig", "3070rig":":pick: 3070rig", "2080rig":":pick: 2080rig", "2070rig":":pick: 2070rig"}
-        self.drugName = {"wetweed":":shamrock: Wet Weed", "weed":":herb: Weed", "meth":":cloud: Crystal Meth", "cocaine":":cloud: Cocaine", "heroin":":cloud: Herion", "amp":":cloud: Amphetamine", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "mdma":":pill: Ecstasy"}
-        self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A better way to dry weed, gives you 20% more weed. (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)", "mixer":"Needed to mix drugs. (id => `mixer`)", "sugar":"Used to mix drugs with. (id => `sugar`)", "wash":"Used to mix drugs with. (id => `wash`)", "soda":"Used to mix drugs with. (id => `soda`)", "amf":"1g amfetamin ==> 5g mdma (id => `amf`)", "grape":"Needed to produce MDMA (id => `grape`)", "gun":"You can rob with this thing (id => `gun`)", "a11":"You can mine bitcoin with this. (id => `a11`)", "a10":"You can mine bitcoin with this. (id => `a10`)", "a9":"You can mine bitcoin with this. (id => `a9`)", "3090rig":"You can mine ethereum with this. (id => `3090rig`)", "3080rig":"You can mine ethereum with this. (id => `3080rig`)", "3070rig":"You can mine ethereum with this. (id => `3070rig`)", "2080rig":"You can mine ethereum with this. (id => `2080rig`)", "2070rig":"You can mine ethereum with this. (id => `2070rig`)"}
-        self.drugDescription = {"wetweed":"You need to dry wet weed to turn it into sellable weed", "weed":"The green stuff", "meth":"White powder with good effects", "cocaine":"The most expensive drug", "heroin":"The more serious drug", "amp":"So you wanna be fast?", "mdma":"Relaxing pills"}
-        self.drugLvls = {"1":["weed", "amp"], "10":["mdma", "meth"], "25":["cocaine", "heroin"]}
-        self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":30, "cocaine":50, "heroin":20, "amp":20, "lab1":15000, "lab2":75000, "lab3":500000, "mixer":5000, "soda":7, "wash":2, "sugar":5, "amf":25, "gun":1000, "a11":20000, "a10":15000, "a9":10000, "3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000}
+        self.fullName = {"pot":":potted_plant: Flower Pot", "led":":bulb: LED Lamp", "hid":":bulb: HID Lamp", "dryer":":control_knobs: Electric Dryer", "ruderalis":":seedling: Ruderalis seeds", "indica":":seedling: Indica seeds", "microscope":":microscope: Microscope", "meth":":cloud: Crystal Meth Powder", "cocaine":":cloud: Cocaine Powder", "heroin":":cloud: Heroin Powder", "amp":":cloud: Amphetamine Powder", "mixer":":sake: Mixer", "wash":":soap: Washing Powder", "soda":":fog: Baking Soda", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "grape":":grapes: Grape Sugar", "gun":":gun: Gun", "a11":":hammer_pick: A11", "a10":":hammer_pick: A10", "a9":":hammer_pick: A9", ":pick: 3090rig":":pick: 3090rig", "3080rig":":pick: 3080rig", "3070rig":":pick: 3070rig", "2080rig":":pick: 2080rig", "2070rig":":pick: 2070rig", "filter":":dash: Air Filter", "basket":":basket: Wooden Basket"}
+        self.drugName = {"wetweed":":shamrock: Wet Weed", "weed":":herb: Weed", "meth":":cloud: Crystal Meth", "cocaine":":cloud: Cocaine", "heroin":":cloud: Herion", "amp":":cloud: Amphetamine", "sugar":":ice_cube: Sugar", "amf":":cloud: Amfetamin", "mdma":":pill: Ecstasy", "saucer":":mushroom: Flying Saucer Mushroom", "knobby":":mushroom: Knobby Tops", "bohemica":":mushroom: The Bohemian Psilocybe"}
+        self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A better way to dry weed, gives you 20% more weed. (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)", "mixer":"Needed to mix drugs. (id => `mixer`)", "sugar":"Used to mix drugs with. (id => `sugar`)", "wash":"Used to mix drugs with. (id => `wash`)", "soda":"Used to mix drugs with. (id => `soda`)", "amf":"1g amfetamin ==> 5g mdma (id => `amf`)", "grape":"Needed to produce MDMA (id => `grape`)", "gun":"You can rob with this thing (id => `gun`)", "a11":"You can mine bitcoin with this. (id => `a11`)", "a10":"You can mine bitcoin with this. (id => `a10`)", "a9":"You can mine bitcoin with this. (id => `a9`)", "3090rig":"You can mine ethereum with this. (id => `3090rig`)", "3080rig":"You can mine ethereum with this. (id => `3080rig`)", "3070rig":"You can mine ethereum with this. (id => `3070rig`)", "2080rig":"You can mine ethereum with this. (id => `2080rig`)", "2070rig":"You can mine ethereum with this. (id => `2070rig`)", "filter":"This boosts your weed growth. (id => `filter`)", "basket":"A better way to collect shrooms. (id => `basket`)"}
+        self.drugDescription = {"wetweed":"You need to dry wet weed to turn it into sellable weed", "weed":"The green stuff", "meth":"White powder with good effects", "cocaine":"The most expensive drug", "heroin":"The more serious drug", "amp":"So you wanna be fast?", "mdma":"Relaxing pills", "saucer":"The most rare magic mushroom out there. (id => `saucer`)", "knobby":"Expensive and rare shroom. (id => `knobby`)", "bohemica":"The most common magic mushroom (id => `bohemica`)"}
+        self.drugLvls = {"1":["weed", "amp"], "10":["meth", "saucer", "knobby", "bohemica"], "25":["cocaine", "heroin", "mdma"]}
+        self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":15, "cocaine":30, "heroin":10, "amp":7, "lab1":15000, "lab2":50000, "lab3":250000, "mixer":5000, "soda":7, "wash":2, "sugar":5, "amf":25, "gun":1000, "a11":20000, "a10":15000, "a9":10000, "3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000, "filter":3000, "basket":500}
         self.miners = {"asic":{"a11":20000, "a10":15000, "a9":10000}, "gpu":{"3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000}}
         self.hashRate = {"a11":5000, "a10":3500, "a9":1500, "3090rig":10000, "3080rig":7500, "3070rig":6000, "2080rig":5000, "2070rig":3500}
         self.producmentTime = {"meth":540, "cocaine":1200, "herion":660, "amp":600, "mdma":600}
         self.produceReward = {"meth":4, "cocaine":3, "herion":4, "amp":5, "mdma":5}
         self.substances = {"soda":10, "wash":0, "sugar":5}
+        self.notProduceable = ["weed", "wetweed", "saucer", "knobby", "bohemica"]
+        self.shrooms = {"saucer":1, "knobby":7, "bohemica":25}
         self.buildings = {
             "house":[
                 {"type":"Small appartment", "name":"Starter appartment", "size":2, "electricity":0.4, "price":30000, "id":"smallappartment"},
@@ -60,23 +62,34 @@ class MyClient(discord.Client):
                 {"type":"Mega warehouse", "name":"Now this is a warehouse!", "size":5000, "electricity":0.15, "price":4000000, "id":"megawarehouse"},
                 {"type":"Sebko warehouse", "name":"This is a warehouse owned only by sebko himself!", "size":25000, "electricity":0.20, "price":10000000, "id":"sebkowarehouse"}],
             "lab":[
-                {"type":"Small lab", "name":"Friend's kitchen", "size":4, "electricity":0.35, "price":15000, "id":"smalllab"},
+                {"type":"Small lab", "name":"Friend's kitchen", "size":5, "electricity":0.35, "price":15000, "id":"smalllab"},
                 {"type":"Medium lab", "name":"Normal chemical lab", "size":15, "electricity":0.3, "price":50000, "id":"mediumlab"},
-                {"type":"Large lab", "name":"Modern lab", "size":50, "electricity":0.3, "price":125000, "id":"largelab"},
+                {"type":"Large lab", "name":"Modern lab", "size":40, "electricity":0.3, "price":125000, "id":"largelab"},
                 {"type":"XL lab", "name":"Large modern lab", "size":100, "electricity":0.25, "price":250000, "id":"xllab"},
-                {"type":"XXL lab", "name":"This is sience!", "size":250, "electricity":0.25, "price":500000, "id":"xlllab"},
-                {"type":"Mega lab", "name":"This is ULTRA sience!", "size":750, "electricity":0.25, "price":1000000, "id":"megalab"}]}
+                {"type":"XXL lab", "name":"This is science!", "size":250, "electricity":0.25, "price":500000, "id":"xlllab"},
+                {"type":"Mega lab", "name":"This is ULTRA science!", "size":500, "electricity":0.25, "price":1000000, "id":"megalab"},
+                {"type":"Ultimate lab", "name":"This is ULTIMATE science!", "size":1000, "electricity":0.20, "price":5000000, "id":"ultimatelab"}]}
         self.starterHouse = self.buildings["house"][0]
         self.buildingDB = {}
         for buildingType in self.buildings:
             for building in self.buildings[buildingType]:
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
-        self.sellPrice = {"weed":10, "amp":10, "meth":12, "heroin":15, "cocaine":45}
-        self.cooldowns = {"dealRefresh":900, "labBoost":120, "ruderalis":600, "indica":900, "police":300, "heist":600}
+        self.sellPrice = {"weed":8, "amp":10, "meth":12, "heroin":15, "cocaine":45, "mdma":15, "saucer":150, "knobby":30, "bohemica":15}
+        self.cooldowns = {"dealRefresh":300, "labBoost":120, "ruderalis":600, "indica":900, "police":300, "heist":600, "msg":2, "woods":300, "saucer":2400, "knobby":1800, "bohemica":1200, "gang":3600}
         self.cryptoName = {"BTC":"Bitcoin", "ETH":"Ethereum", "LTC":"Litecoin", "DOGE":"Dogecoin"}
         self.cryptos = ["BTC", "ETH", "LTC", "DOGE"]
         self.electricityMultiplayer = 1.5
+        self.jobs = {"windowcleaner":(120, 500), "youtuber":(60, 400), "programmer":(600, 5000), "mafian":(1800, 25000)}
+        self.VIP = ["151721375210536961", "682644855713038384", "264127862498525186", "670545442307702794", "794223995691991052"]
+        self.tips = [
+            (":potted_plant: Growing Weed Tip", "Warehouses are better than a reagular house, you can list all warehouses with `"+self.prefix+"shop buildigs warehouse` and buy any warehouse with `"+self.prefix+"buy WAREHOUSE`"),
+            (":potted_plant: Drying Weed Tip", "You can buy a `dryer` to get 20%+ weed when you dry it."),
+            (":potted_plant: Growing Weed Tip", "You can buy a `filter` (air filter) to make your weed grow faster."),
+            (":lab_coat: Lab Tip", "You can buy a `lab1`/`lab2`/`lab3` upgrade for your lab to boost your production."),
+            (":money: Mining Crypto Tip", "You can buy crypto miners from `mine` shop, then install them in your house with `"+self.prefix+"mine add MINER`"),
+            (":electric_plug: Electricity Tip", "You can sell your `LED` lamps and buy `HID` which will not only save you a lot of money, buy also boost your weed growth"),
+            (":mushroom: Magic Mushrooms Tip", "You can go to the woods and collect magic mushroom with `.woods`")]
         print("BOT IS READY")
 
     def loadDB(self):
@@ -111,7 +124,7 @@ class MyClient(discord.Client):
         else:
             return "excelent"
 
-    def newDeals(self, user, new=False, amount=5):
+    def newDeals(self, user, new=False, drug=None, amount=5):
         drugs = self.drugLvls["1"]
         if not new:
             if self.database["user"][user]["lvl"] >= 10:
@@ -120,6 +133,11 @@ class MyClient(discord.Client):
             if self.database["user"][user]["lvl"] >= 25:
                 for d in self.drugLvls["25"]:
                     drugs.append(d)
+        if drug != None:
+            if drug in drugs:
+                drugs = [drug]
+            else:
+                return None
         deals = []
         for _ in range(amount):
             deal = {"drug":random.choice(drugs), "quality":random.randint(50, 100)}
@@ -139,8 +157,12 @@ class MyClient(discord.Client):
         if message.content.startswith(self.prefix):
             t = time()
             if str(message.author.id) not in self.database["user"]:
-                await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help`")
-                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time()), "police":{"prison":False, "expire":round(time())}, "crypto":{}, "lastHeist":0, "mining":[]}
+                await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help tutorial`")
+                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time()), "police":{"prison":False, "expire":round(time())}, "crypto":{}, "lastHeist":0, "mining":[], "lastMsg":round(time()), "woodsTime":0, "gang":None, "prestige":1}
+            if self.database["user"][str(message.author.id)]["lastMsg"]+self.cooldowns["msg"] > time() and str(message.author.id) not in self.VIP:
+                t = self.database["user"][str(message.author.id)]["lastMsg"]+self.cooldowns["msg"]-time()
+                await message.channel.send(message.author.mention+" Woah, slow down, you need to wait **"+str(round(t))+" seconds** to send another command")
+                return
             if self.database["user"][str(message.author.id)]["lastBill"]+86400 < time():
                 self.database["user"][str(message.author.id)]["balance"] -= self.database["user"][str(message.author.id)]["electricity"]*self.electricityMultiplayer
                 self.database["user"][str(message.author.id)]["electricity"] = 0
@@ -148,19 +170,20 @@ class MyClient(discord.Client):
             if self.database["user"][str(message.author.id)]["police"]["prison"]:
                 if self.database["user"][str(message.author.id)]["police"]["expire"] < time():
                     await message.channel.send(message.author.mention+" You ware just released from prison, be careful next time...")
+                    self.database["user"][str(message.author.id)]["police"]["prison"] = False
                 else:
                     remaining = str(datetime.timedelta(seconds=round(self.database["user"][str(message.author.id)]["police"]["expire"]-time()))).split(":")
                     for i in range(len(remaining)):
                         if remaining[i].startswith("0") and len(remaining[i]) != 1:
                             remaining[i] = remaining[i][1:]
-                    embed = discord.Embed(title="Prison", description="**"+message.author.name+" you ware caught selling/holding drugs!**\n\n**Released in:** "+str(remaining[0])+" hours and "+str(remaining[1])+" minutes", color=discord.Color.blue())
+                    embed = discord.Embed(title="Prison", description="**"+message.author.name+" you ware caught!**\n\n**Released in:** "+str(remaining[0])+" hours "+str(remaining[1])+" minutes "+str(remaining[2])+" seconds", color=discord.Color.blue())
                     embed.set_thumbnail(url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Patch_of_the_New_York_City_Police_Department.svg/1200px-Patch_of_the_New_York_City_Police_Department.svg.png")
                     await message.channel.send(embed=embed)
                     return
             if self.lastSave+self.autosaveInterval < time():
                 self.saveDB()
                 self.lastSave = time()
-            command = message.content.lower()[len(self.prefix):].split(" ")
+            command = message.content.lower().replace("-", "")[len(self.prefix):].split(" ")
             if command[0] == "ping":
                 await message.channel.send("Pong!")
             elif command[0] == "help":
@@ -171,15 +194,26 @@ class MyClient(discord.Client):
                 else:
                     if command[1] == "info":
                         embed = discord.Embed(title="Dark Dealer Info", description="Some informations about the game", color=discord.Color.light_gray())
-                        embed.add_field(name=":satellite: Basic Info", value="This is a drug dealing game, you start by selling marijuana (weed) and amphetamine (speed), they both sell at 10$ per gram. There is a whole market changing the avarage value so it can change (not more than 2$ per gram)", inline=False)
+                        embed.add_field(name=":satellite: Basic Info", value="This is a drug dealing game, you start by selling marijuana (weed) and amphetamine (speed), weed sells at 8 $ per gram and amp sells at 10 $ per gram.", inline=False)
                         embed.add_field(name=":electric_plug: Power", value="Yes, there is electricity in this game (you need to pay your bills). Some equipment (lamps, labs...) have a electricity consumption (in watts), you pay the bill automaticly each 24hours IRL. And yes you can go into negatives, so be careful how much money you have and what you can and cant afford...")
-                        embed.add_field(name=":police_officer: Police", value="While trying to make deals and make as much profit as possible there are these stupid pigs, that want to put you behind bars, so be careful when selling with 'qucksell'. Also ist not recommended to live where you grow, you can be easly swatted and put behind bars. `What happens to you when the police catches you?` Its not as drastic as IRL, but you will get a cooldown depending on what type of drug you were selling/buing/producing and the amount, ex. if you grow around 100 grams of weed in your appartment and you get swatted, your coolding is going to be around 1day. Just dont live where you grow weed and you should be fine...", inline=False)
+                        embed.add_field(name=":police_officer: Police", value="Cops can fine you and they can put you in prison, they can catch you if you use `.rob` or `.qicksell` if you don't want to get caught just awoid these 2 commands.", inline=False)
                         embed.add_field(name=":herb: Growing Weed", value="So the first step in making money, growing the green stuff. You can grow weed anywhere, but not in your lab. Each house/appartment/warehouse has a different size (capacity) of the amount of plants you can grow there, biger house => more plants => more money. Firstly you need a regular flower pot, its easy to get, but you need to buy it from the online weed shop, then you need to get a lamp (better lamp => less power cusumtion + faster weed growth) and you need to get the actual seeds (from the weed shop too), finaly you need to start growing them (this will take 1day and 6hours with the cheapest lighting). Be careful where you live and where you grow your weed, you attract more police attention and can be swatted anytime.", inline=False)
                         embed.add_field(name=":mag_right: Producing Powder Drugs", value="To produce powder drugs, firstly you need a lab starting from 15k. Then you need some powder to produce the drug from. Lastly you need to produce the drug this takes 2 IRL days without any upgrades. You can list all upgrades with the command `"+self.prefix+"upgrades <BUILDING>` then buy them with the command `"+self.prefix+"upgrade <BUILDING> <UPGRADE_LVL>`", inline=False)
                         embed.add_field(name=":dollar: Selling Drugs", value="So, selling the good stuff isn't that hard as it seems, BUT the police might be interested in participating in the deal aswell so be careful who and how you sell it to... There are 3 ways of selling drugs:\n 1. Qucksell - qucksell is the easiest and fastest method of selling drugs, but you dont make as much money here and also police are interested in investigating quicksells.\n 2. Market - On the market there are 2 ways of selling stuff: 1. Market making - you will create an player only or NPC only or both offer, it will take time before an NPC or an another player buys it (pricing will make a big difference here) 2. Market taking - You will see that some NPC's or other players are willing to buy a certain drug at certain price, you can easly fill the order and quckly finish the trade, but you will pay a 'Market taker fee' this is 5% of your profit, but there is NO police attetion when using the market.\n 3. Gang - Lastly selling to a gang is realy profitalbe sometimes, but realy risky...", inline=False)
+                    elif command[1] == "tutorial":
+                        embed = discord.Embed(title="Dark Dealer Tutorial", color=discord.Color.light_gray())
+                        embed.add_field(name=":shopping_cart: First steps (buying)", value="First you need to buy: **pots** (`pot`), **lamps** (`led`), **seeds** (`indica`/`ruderalis`). You can buy stuff with the command `"+self.prefix+"buy ITEM`.", inline=False)
+                        embed.add_field(name=":potted_plant: Growing stuff (planting weed)", value="You now can plant weed in you house using the command `"+self.prefix+"grow grow SEEDS house AMOUNT`. Example command ("+self.prefix+"grow grow indica house 2)\nYou can view your growing info with the command `"+self.prefix+"grow info`.", inline=False)
+                        embed.add_field(name=":scissors: Collecting (harvesting weed)", value="When your weeds has grown, you now can harvest it with the command `"+self.prefix+"grow harvest`. Now you have **Wet Weed** which you can't sell yet, you need to dry it first with the command `"+self.prefix+"grow dry`", inline=False)
+                        embed.add_field(name=":money_mouth: Making $$$ (selling)", value="Last thing you need to do is sell your weed, you can view your **drug inventory** with the command `"+self.prefix+"drugs`, now you need to **create some deals** using command `"+self.prefix+"newdeals weed`, now do `.deals` to **list** all of the **new deals**. Finaly **pick the best deal** (most $ per gram) and finish it with the command `"+self.prefix+"deals DEAL_NUMBER GRAMS`", inline=False)
                     elif command[1] in ["commands", "cmds"]:
                         embed = discord.Embed(title="Dark Dealer Commands", description="`balance`, `shops`, `shop`, `buy`, `jobs`, `job`, `work`, `inventory`, `drugs`, `buildings`, `grow`, `bills`, `levelup`, `lab`, `heist`, `levelup`, `bet`, `calcmix`, `mix`, `crypto`, `calccrypto`, `give`, `gift`, `startheist`, `joinheist`, `mine`", color=discord.Color.light_gray())
                         embed.set_footer(text="Use "+self.prefix+" before each command!")
+                await message.channel.send(embed=embed)
+            elif command[0] in ["tip", "tips"]:
+                embed = discord.Embed(title="Dark Dealer Tips", description="Here is a random tip for the game:", color=discord.Color.dark_gray())
+                tip = random.choice(self.tips)
+                embed.add_field(name=tip[0], value=tip[1], inline=False)
                 await message.channel.send(embed=embed)
             elif command[0] in ["balance", "bal", "money"]:
                 user = str(message.author.id)
@@ -209,44 +243,43 @@ class MyClient(discord.Client):
                 embed.set_author(name=name+"'s profile", icon_url=str(avatar).replace("size=1024", "size=256"))
                 embed.add_field(name='Level', value=str(self.database["user"][user]["lvl"]), inline=True)
                 embed.add_field(name='Balance', value=self.currency+" "+self.nice_number(self.database["user"][user]["balance"]), inline=True)
+                embed.add_field(name='Prestige', value="Player is currently at prestige level "+str(self.database["user"][user]["prestige"]), inline=False)
                 embed.add_field(name='Inventory', value="Player has `"+str(len(self.database["user"][user]["inventory"]["items"]))+"` different items in his inventory", inline=False)
                 if self.database["user"][user]["job"] != None:
                     embed.add_field(name='Employment', value="Player is working as a "+str(self.database["user"][user]["job"]), inline=False)
                 await message.channel.send(embed=embed)
             elif command[0] in ["jobs", "joblist"]:
                 embed = discord.Embed(title="Job List", color=discord.Color.blue())
-                embed.add_field(name=':window: Window Cleaner', value="500 "+self.currency+" per clean | cooldown: 10 minutes (id => `windowcleaner`)", inline=False)
-                embed.add_field(name=':desktop: YouTuber', value="400 "+self.currency+" per video | cooldown: 5 minutes (id => `youtuber`)", inline=False)
+                embed.add_field(name=':desktop: YouTuber', value="400 "+self.currency+" per video | cooldown: 1 minute (id => `youtuber`)", inline=False)
+                embed.add_field(name=':window: Window Cleaner', value="500 "+self.currency+" per clean | cooldown: 2 minutes (id => `windowcleaner`)", inline=False)
+                embed.add_field(name=':desktop: Programmer', value="5000 "+self.currency+" per application | cooldown: 10 minutes (id => `programmer`)", inline=False)
+                embed.add_field(name=':gun: Mafian', value="25000 "+self.currency+" per crime | cooldown: 30 minutes (id => `mafian`)", inline=False)
                 embed.set_footer(text="You can apply to a job with the command `"+self.prefix+"job <JOB_ID>`")
                 await message.channel.send(embed=embed)
             elif command[0] == "job":
                 if len(command) != 2:
-                    await message.channel.send("Please use => `"+self.prefix+"job <JOB_ID>`")
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"job <JOB_ID>`")
                 elif command[1] == "unemploy":
                     if self.database["user"][str(message.author.id)]["job"] != None:
                         self.database["user"][str(message.author.id)]["job"] = None
                         self.database["user"][str(message.author.id)]["lastJob"] = 0
-                        await message.channel.send("You are not employed anymore")
+                        await message.channel.send(message.author.mention+" You are not employed anymore")
                     else:
                         await message.channel.send("You are not employed")
                 elif self.database["user"][str(message.author.id)]["job"] != None:
-                    await message.channel.send("You are already working as a "+self.database["user"][str(message.author.id)]["job"]+", use `"+self.prefix+"job unemploy` to leave your current job")
+                    await message.channel.send(message.author.mention+" You are already working as a "+self.database["user"][str(message.author.id)]["job"]+", use `"+self.prefix+"job unemploy` to leave your current job")
                 else:
-                    if command[1] in ["windowcleaner", "youtuber"]:
+                    if command[1] in self.jobs:
                         self.database["user"][str(message.author.id)]["job"] = command[1]
                         self.database["user"][str(message.author.id)]["lastJob"] = time()
-                        await message.channel.send("You are now working as a "+command[1])
+                        await message.channel.send(message.author.mention+" You are now working as a "+command[1])
                     else:
-                        await message.channel.send("Job with ID `"+command[1]+"` does not exist, use `"+self.prefix+"jobs` to list all available jobs and their IDs")
+                        await message.channel.send(message.author.mention+" Job with ID `"+command[1]+"` does not exist, use `"+self.prefix+"jobs` to list all available jobs and their IDs")
             elif command[0] == "work":
                 job = self.database["user"][str(message.author.id)]["job"]
                 if job != None:
-                    if job == "youtuber":
-                        reward = 400
-                        cooldown = 300
-                    elif job == "windowcleaner":
-                        reward = 500
-                        cooldown = 600
+                    reward = self.jobs[job][1]
+                    cooldown = self.jobs[job][0]
                     if self.database["user"][str(message.author.id)]["lastJob"]+cooldown < time():
                         await message.channel.send(message.author.mention+" You have worked your shift and you earned "+self.nice_number(reward)+" "+self.currency)
                         self.database["user"][str(message.author.id)]["balance"] += reward
@@ -261,11 +294,11 @@ class MyClient(discord.Client):
                     await message.channel.send(message.author.mention+" You are not employed, you can employ using `"+self.prefix+"job <JOB_ID>`")
             elif command[0] == "shops":
                 embed = discord.Embed(title="Shop List", color=discord.Color.dark_grey())
-                embed.add_field(name=":potted_plant: Smoky", value="Everyting that your weed growing needs. (id => `smoky`/`weed`)", inline=False)
+                embed.add_field(name=":potted_plant: Smoky", value="Everything that your weed growing needs. (id => `smoky`/`weed`)", inline=False)
                 embed.add_field(name=":apple: Fruit Shop", value="A normal legal shop. (id => `fruit`/`normal`/`legal`)", inline=False)
                 embed.add_field(name=":scientist: Science Needs", value="We sell high quality lab equpment. (id => `science`/`lab`)", inline=False)
                 embed.add_field(name=":mag_right: Power of Powder", value="We sell powder that can be turned into large amounts of powder drugs. (id => `powder`)", inline=False)
-                embed.add_field(name=":house: PrimeLocation", value="We sell great appartments, warehouses, labs... (id => `location`/`buildings`/`properties`)", inline=False)
+                embed.add_field(name=":house: Prime Location", value="We sell great apartments, warehouses, labs... (id => `location`/`buildings`/`properties`)", inline=False)
                 embed.add_field(name=":pick: Miners Heaven", value="You can buy crypto miners here. (id => `miners`/`mine`)", inline=False)
                 embed.set_footer(text="You can visit any shop with "+self.prefix+"shop <SHOP_ID>")
                 await message.channel.send(embed=embed)
@@ -280,6 +313,7 @@ class MyClient(discord.Client):
                         embed.add_field(name=":bulb: LED Lamp - "+self.nice_number(self.prices["led"])+" "+self.currency, value="Cheap and not power efficient lamp. (750W) (id => `led`)", inline=False)
                         embed.add_field(name=":bulb: HID Lamp - "+self.nice_number(self.prices["hid"])+" "+self.currency, value="High quality and power efficient lamp. (500W) (id => `hid`)", inline=False)
                         embed.add_field(name=":control_knobs: Electric Dryer - "+self.nice_number(self.prices["dryer"])+" "+self.currency, value="A better way to dry weed, gives you 20% more weed (id => `dryer`)", inline=False)
+                        embed.add_field(name=":dash: Air Filter - "+self.nice_number(self.prices["filter"])+" "+self.currency, value="This boosts your weed growth. (id => `filter`)", inline=False)
                         embed.add_field(name=":gun: Gun - "+self.nice_number(self.prices["gun"])+" "+self.currency, value="You can rob with this thing. (id => `gun`)", inline=False)
                         embed.set_footer(text="You can buy stuff with "+self.prefix+"buy <ITEM_ID>")
                         await message.channel.send(embed=embed)
@@ -300,6 +334,7 @@ class MyClient(discord.Client):
                         embed.add_field(name=":ice_cube: Sugar - "+self.nice_number(self.prices["sugar"])+" "+self.currency, value="Used to mix drugs with. (id => `sugar`)", inline=False)
                         embed.add_field(name=":soap: Washing Powder - "+self.nice_number(self.prices["wash"])+" "+self.currency, value="Used to mix drugs with. (id => `wash`)", inline=False)
                         embed.add_field(name=":fog: Baking Soda - "+self.nice_number(self.prices["soda"])+" "+self.currency, value="Used to mix drugs with. (id => `soda`)", inline=False)
+                        embed.add_field(name=":basket: Wooden Basket - "+self.nice_number(self.prices["basket"])+" "+self.currency, value="A better way to collect shrooms. (id => `basket`)", inline=False)
                         embed.set_footer(text="You can buy stuff with "+self.prefix+"buy <ITEM_ID> <AMOUNT (optional)>")
                         await message.channel.send(embed=embed)
                     elif command[1] == "powder":
@@ -424,12 +459,13 @@ class MyClient(discord.Client):
                 if len(command) == 2 or len(command) == 3:
                     user = str(message.author.id)
                     amount = 1
-                    if len(command) == 3:
+                    if len(command) == 3 and command[1].upper() not in self.cryptos:
                         try:
                             if amount != "max":
                                 amount = int(command[2])
                         except:
-                            await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"sell <ITEM_ID> <AMOUNT>")
+                            await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"sell <ITEM_ID> <AMOUNT>`")
+                            return
                     if command[1] in self.prices:
                         if command[1] in self.database["user"][user]["inventory"]["items"]:
                             if amount == "max":
@@ -502,7 +538,7 @@ class MyClient(discord.Client):
                     for item in pages[page-1]:
                         embed.add_field(name=item[0], value=item[1], inline=False)
                     await message.channel.send(embed=embed)
-            elif command[0] in ["drugs", "druglist"]: # TODO Mixes
+            elif command[0] in ["drugs", "druglist"]:
                 user = str(message.author.id)
                 name = message.author.name
                 page = 1
@@ -522,16 +558,32 @@ class MyClient(discord.Client):
                 pages = [[]]
                 if len(self.database["user"][user]["inventory"]["drugs"]["pure"]) > 0:
                     for drug in self.database["user"][user]["inventory"]["drugs"]["pure"]:
-                        if len(pages[-1]) < 5:
-                            pages[-1].append(("**"+self.drugName[drug]+"** ("+str(self.database["user"][user]["inventory"]["drugs"]["pure"][drug])+" grams)", self.drugDescription[drug]))
+                        amount = self.database["user"][user]["inventory"]["drugs"]["pure"][drug]
+                        if amount >= 1000:
+                            amount = str(amount/1000) + " kilos"
+                        elif amount >= 1000000:
+                            amount = str(amount/1000000) + " tons"
                         else:
-                            pages.append([("**"+self.drugName[drug]+"** ("+str(self.database["user"][user]["inventory"]["drugs"]["pure"][drug])+" grams)", self.drugDescription[drug])])
+                            amount = str(amount) + " grams"
+                        if str(amount).split(".")[-1].split(" ")[0] == "0":
+                            amount = amount.split(".")[0]+" "+amount.split(" ")[1]
+                        if len(pages[-1]) < 5:
+                            pages[-1].append(("**"+self.drugName[drug]+"** ("+str(amount)+")", self.drugDescription[drug]))
+                        else:
+                            pages.append([("**"+self.drugName[drug]+"** ("+str(amount)+")", self.drugDescription[drug])])
                 if len(self.database["user"][user]["inventory"]["drugs"]["mixes"]) > 0:
                     for drug in self.database["user"][user]["inventory"]["drugs"]["mixes"]:
-                        if len(pages[-1]) < 5:
-                            pages[-1].append(("**"+drug["icon"]+" "+self.drugName[drug["drug"]].split(":")[-1]+"** Mix ("+str(drug["amount"])+" grams)", "Quality: "+str(drug["quality"])+" ("+self.mixQuality(drug["quality"])+")"))
+                        amount = drug["amount"]
+                        if amount >= 1000:
+                            amount = str(amount/1000) + " kilos"
+                        elif amount >= 1000000:
+                            amount = str(amount/1000000) + " tons"
                         else:
-                            pages.append([("**"+drug["icon"]+" "+self.drugName[drug["drug"]].split(":")[-1]+"** Mix ("+str(drug["amount"])+" grams)", "Quality: "+str(drug["quality"])+" ("+self.mixQuality(drug["quality"])+")")])
+                            amount = str(amount) + " grams"
+                        if len(pages[-1]) < 5:
+                            pages[-1].append(("**"+drug["icon"]+" "+self.drugName[drug["drug"]].split(":")[-1]+"** Mix ("+str(amount)+")", "Quality: "+str(drug["quality"])+" ("+self.mixQuality(drug["quality"])+")"))
+                        else:
+                            pages.append([("**"+drug["icon"]+" "+self.drugName[drug["drug"]].split(":")[-1]+"** Mix ("+str(amount)+")", "Quality: "+str(drug["quality"])+" ("+self.mixQuality(drug["quality"])+")")])
                 if page > len(pages):
                     await message.channel.send(message.author.mention+" Sorry, but you only have `"+str(len(pages))+"` pages")
                 elif pages[page-1] == []:
@@ -568,7 +620,7 @@ class MyClient(discord.Client):
                     target = 2
                 if (len(command) >= 3 and len(message.mentions) > 0) or (len(command) >= 2 and len(message.mentions) == 0):
                     embed = discord.Embed(title="Grow Menu", color=discord.Color.green())
-                    embed.set_thumbnail(url="https://media.wired.com/photos/5c1840ae9fe42d6b6e532fbb/1:1/w_1200,h_1200,c_limit/weed_dark-featured-570715425.jpg")
+                    embed.set_thumbnail(url="https://st2.depositphotos.com/1008559/11854/v/600/depositphotos_118543668-stock-illustration-round-pattern-from-cannabis-leaf.jpg")
                     if command[target] == "info":
                         capacity = self.database["user"][user]["house"]["size"]
                         if self.database["user"][user]["warehouse"] != None:
@@ -604,11 +656,15 @@ class MyClient(discord.Client):
                                 except:
                                     await message.channel.send(message.author.mention+" That's not a valid number")
                                     return
-                            if command[target+1] in ["ruderalis", "indica"]:
+                            if command[target+1] in ["ruderalis", "indica", "saucer", "knobby", "bohemica"]:
                                 if command[target+2] in ["house", "warehouse"]:
                                     if self.database["user"][user][command[target+2]] != None:
                                         capacity = self.database["user"][user][command[target+2]]["size"]
-                                        if capacity-len(self.database["user"][user]["growing"]) >= amount:
+                                        growing = 0
+                                        for plant in self.database["user"][user]["growing"]:
+                                            if plant["place"] == command[target+2]:
+                                                growing += 1
+                                        if capacity-growing >= amount:
                                             lamps = []
                                             lamp = None
                                             pots = 0
@@ -626,36 +682,61 @@ class MyClient(discord.Client):
                                             if "pot" in self.database["user"][user]["inventory"]["items"]:
                                                 if self.database["user"][user]["inventory"]["items"]["pot"] >= pots+amount:
                                                     pot = True
-                                            if command[target+1] in self.database["user"][user]["inventory"]["items"]:
-                                                if self.database["user"][user]["inventory"]["items"][command[target+1]] >= amount:
-                                                    self.database["user"][user]["inventory"]["items"][command[target+1]] -= amount
-                                                    if self.database["user"][user]["inventory"]["items"][command[target+1]] == 0:
-                                                        self.database["user"][user]["inventory"]["items"].pop(command[target+1])
-                                                    if lamp != None:
-                                                        if pot:
-                                                            speed = 1
-                                                            watts = 1000
-                                                            seedTime = self.cooldowns["indica"]
-                                                            if lamp == "hid":
-                                                                speed = 1.5
-                                                                watts = 400
-                                                            if command[target+1] == "ruderalis":
-                                                                seedTime = self.cooldowns["ruderalis"]
-                                                            growTime = seedTime/speed
-                                                            for _ in range(amount):
-                                                                self.database["user"][user]["growing"].append({"seeds":command[target+1], "growTime":round(time()+growTime), "lamp":lamp})
-                                                                self.database["user"][user]["electricity"] += round((watts/1000)*(growTime/60))
-                                                            remaining = str(datetime.timedelta(seconds=growTime)).split(":")
-                                                            for i in range(len(remaining)):
-                                                                if remaining[i].startswith("0") and len(remaining[i]) != 1:
-                                                                    remaining[i] = remaining[i][1:]
-                                                            await message.channel.send(message.author.mention+" You planted a "+command[target+1]+" seed with a "+lamp+" lamp, it will take **"+remaining[0]+" hours "+remaining[1]+" minutes** to grow")
+                                            if command[target+1] in self.database["user"][user]["inventory"]["items"] or command[target+1] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                                if lamp != None:
+                                                    if pot:
+                                                        if command[target+1] in self.database["user"][user]["inventory"]["items"]:
+                                                            if self.database["user"][user]["inventory"]["items"][command[target+1]] >= amount:
+                                                                self.database["user"][user]["inventory"]["items"][command[target+1]] -= amount
+                                                                if self.database["user"][user]["inventory"]["items"][command[target+1]] == 0:
+                                                                    self.database["user"][user]["inventory"]["items"].pop(command[target+1])
+                                                            else:
+                                                                await message.channel.send(message.author.mention+" You don't have enough seeds")
+                                                                return
                                                         else:
-                                                            await message.channel.send(message.author.mention+" You don't have enough pots to grow more weed")
+                                                            if self.database["user"][user]["inventory"]["drugs"]["pure"][command[target+1]] >= amount:
+                                                                self.database["user"][user]["inventory"]["drugs"]["pure"][command[target+1]] -= amount
+                                                                if self.database["user"][user]["inventory"]["drugs"]["pure"][command[target+1]] == 0:
+                                                                    self.database["user"][user]["inventory"]["drugs"]["pure"].pop(command[target+1])
+                                                            else:
+                                                                await message.channel.send(message.author.mention+" You don't have enough seeds")
+                                                                return
+                                                        speed = 1
+                                                        watts = 1000
+                                                        growTime = self.cooldowns["indica"]
+                                                        if lamp == "hid":
+                                                            speed = 1.5
+                                                            watts = 400
+                                                        if "filter" in self.database["user"][user]["inventory"]["items"]:
+                                                            if self.database["user"][user]["inventory"]["items"]["filter"] > 0:
+                                                                b = random.randint(0, 20)
+                                                                speed += 0.5
+                                                                watts += 200
+                                                                if b == 50:
+                                                                    self.database["user"][user]["inventory"]["items"]["filter"] -= 1
+                                                                    if self.database["user"][user]["inventory"]["items"]["filter"] <= 0:
+                                                                        self.database["user"][user]["inventory"]["items"].pop("filter")
+                                                                    await message.channel.send(message.author.mention+" **Your filter broke!**")
+                                                        if command[target+1] == "ruderalis":
+                                                            growTime = self.cooldowns["ruderalis"]
+                                                        elif command[target+1] == "bohemica":
+                                                            growTime = self.cooldowns["bohemica"]
+                                                        elif command[target+1] == "knobby":
+                                                            growTime = self.cooldowns["knobby"]
+                                                        elif command[target+1] == "saucer":
+                                                            growTime = self.cooldowns["saucer"]
+                                                        growTime = growTime/speed
+                                                        self.database["user"][user]["growing"].append({"seeds":command[target+1], "growTime":round(time()+growTime), "lamp":lamp, "place":command[target+2], "amount":amount})
+                                                        self.database["user"][user]["electricity"] += round((watts/1000)*(growTime/60)*amount)
+                                                        remaining = str(datetime.timedelta(seconds=growTime)).split(":")
+                                                        for i in range(len(remaining)):
+                                                            if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                                                remaining[i] = remaining[i][1:]
+                                                        await message.channel.send(message.author.mention+" You planted a "+command[target+1]+" seed with a "+lamp+" lamp, it will take **"+remaining[1]+" minutes and "+remaining[2]+" seconds** to grow")
                                                     else:
-                                                        await message.channel.send(message.author.mention+" You don't have enough lamps to grow more weed")
+                                                        await message.channel.send(message.author.mention+" You don't have enough pots to grow more weed")
                                                 else:
-                                                    await message.channel.send(message.author.mention+" You don't have enough seeds")
+                                                    await message.channel.send(message.author.mention+" You don't have enough lamps to grow more weed")
                                             else:
                                                 await message.channel.send(message.author.mention+" You don't have enough seeds")
                                         else:
@@ -673,34 +754,62 @@ class MyClient(discord.Client):
                         name = str(message.author.name)
                         packageSize = 0
                         collectedPlants = []
+                        shrooms = {"saucer":0, "knobby":0, "bohemica":0}
                         for plant in self.database["user"][user]["growing"]:
                             if plant["growTime"] < time():
                                 if plant["seeds"] == "indica":
-                                    packageSize += 30
-                                else:
-                                    packageSize += 20
+                                    packageSize += 30*plant["amount"]
+                                elif plant["seeds"] == "ruderalis":
+                                    packageSize += 20*plant["amount"]
+                                elif plant["seeds"] == "saucer":
+                                    shrooms["saucer"] += 8*plant["amount"]
+                                elif plant["seeds"] == "knobby":
+                                    shrooms["knobby"] += 15*plant["amount"]
+                                elif plant["seeds"] == "bohemica":
+                                    shrooms["bohemica"] += 20*plant["amount"]
                                 collectedPlants.append(plant)
                         potBreaks = 0
                         for plant in collectedPlants:
                             del self.database["user"][user]["growing"][self.database["user"][user]["growing"].index(plant)]
-                            potBreak = random.randint(1, 100)
-                            if potBreak == 100:
-                                self.database["user"][user]["inventory"]["items"]["pot"] -= 1
+                            potBreak = random.randint(0, round(plant/100))
+                            if potBreak > 0:
+                                self.database["user"][user]["inventory"]["items"]["pot"] -= potBreak
                                 if self.database["user"][user]["inventory"]["items"]["pot"] <= 0:
                                     self.database["user"][user]["inventory"]["items"].pop("pot")
-                                potBreaks += 1
+                                potBreaks += potBreak
+                        info = ""
                         if potBreaks == 1:
-                            await message.channel.send(message.author.mention+" Your **pot broke** while harvesting weed!")
+                            info += "Your **pot broke** while harvesting weed/shrooms!\n"
                         elif potBreaks > 1:
-                            await message.channel.send(message.author.mention+" Your **"+str(potBreaks)+"x pots broke** while harvesting weed!")
+                            info += "Your **"+str(potBreaks)+"x pots broke** while harvesting weed/shrooms!\n"
                         if packageSize > 0:
                             if "wetweed" in self.database["user"][user]["inventory"]["drugs"]["pure"]:
                                 self.database["user"][user]["inventory"]["drugs"]["pure"]["wetweed"] += packageSize
                             else:
                                 self.database["user"][user]["inventory"]["drugs"]["pure"]["wetweed"] = packageSize
-                            await message.channel.send(message.author.mention+" You collected "+str(packageSize)+" grams of wet weed")
+                            info += "You collected "+str(packageSize)+" grams of wet weed\n"
+                        if shrooms["saucer"] > 0:
+                            if "saucer" in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                self.database["user"][user]["inventory"]["drugs"]["pure"]["saucer"] += shrooms["saucer"]
+                            else:
+                                self.database["user"][user]["inventory"]["drugs"]["pure"]["saucer"] = shrooms["saucer"]
+                            info += "You collected "+str(shrooms["saucer"])+" grams of saucer\n"
+                        if shrooms["knobby"] > 0:
+                            if "knobby" in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                self.database["user"][user]["inventory"]["drugs"]["pure"]["knobby"] += shrooms["knobby"]
+                            else:
+                                self.database["user"][user]["inventory"]["drugs"]["pure"]["knobby"] = shrooms["knobby"]
+                            info += "You collected "+str(shrooms["knobby"])+" grams of knobby\n"
+                        if shrooms["bohemica"] > 0:
+                            if "bohemica" in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                self.database["user"][user]["inventory"]["drugs"]["pure"]["bohemica"] += shrooms["bohemica"]
+                            else:
+                                self.database["user"][user]["inventory"]["drugs"]["pure"]["bohemica"] = shrooms["bohemica"]
+                            info += "You collected "+str(shrooms["bohemica"])+" grams of bohemica\n"
+                        if shrooms["saucer"] == 0 and shrooms["knobby"] == 0 and shrooms["bohemica"] == 0 and packageSize == 0:
+                            await message.channel.send(message.author.mention+" Your weed/mushrooms aren't fully grown yet")
                         else:
-                            await message.channel.send(message.author.mention+" Your weed hasn't fully grown yet")
+                            await message.channel.send(message.author.mention+" "+info[:-1])
                     elif command[target] == "dry":
                         user = str(message.author.id)
                         name = str(message.author.name)
@@ -753,20 +862,27 @@ class MyClient(discord.Client):
                 await message.channel.send(embed=embed)
             elif command[0] == "levelup":
                 user = str(message.author.id)
-                if len(command) == 2:
+                if len(command) >= 2:
                     if command[1] == "confirm":
-                        cost = round(200*self.database["user"][user]["lvl"]*(self.database["user"][user]["lvl"]/2))
-                        if self.database["user"][user]["balance"]-cost > 0:
-                            self.database["user"][user]["balance"] -= cost
-                            self.database["user"][user]["lvl"] += 1
-                            await message.channel.send(message.author.mention+" You are now lvl "+str(self.database["user"][user]["lvl"]))
-                        else:
-                            await message.channel.send(message.author.mention+" You need `"+str(0-(self.database["user"][user]["balance"]-cost))+" "+self.currency+"` more to level up")
+                        if len(command) >= 3:
+                            try:
+                                amount = int(command[2])
+                            except:
+                                await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"levelup confirm <AMOUNT>`")
+                        for _ in range(amount):
+                            cost = round(200*self.database["user"][user]["lvl"]*(self.database["user"][user]["lvl"]/2))
+                            if self.database["user"][user]["balance"]-cost > 0:
+                                self.database["user"][user]["balance"] -= cost
+                                self.database["user"][user]["lvl"] += 1
+                            else:
+                                await message.channel.send(message.author.mention+" You need `"+str(0-(self.database["user"][user]["balance"]-cost))+" "+self.currency+"` more to level up")
+                                return
+                        await message.channel.send(message.author.mention+" You are now lvl "+str(self.database["user"][user]["lvl"]))
                 else:
                     embed = discord.Embed(title="Level "+str(self.database["user"][user]["lvl"]+1)+" Requirements", color=discord.Color.blue())
                     embed.add_field(name="**Current Level**", value="You are currently level "+str(self.database["user"][user]["lvl"]), inline=False)
-                    embed.add_field(name="**Level Up**", value="You need `"+str(2000*self.database["user"][user]["lvl"]*self.database["user"][user]["lvl"])+" "+self.currency+"`", inline=False)
-                    embed.add_field(name="**Confirm Level Up**", value="Use `"+self.prefix+"levelup confirm` to confirm your level up", inline=False)
+                    embed.add_field(name="**Level Up**", value="You need `"+str(2000*self.database["user"][user]["lvl"]*(self.database["user"][user]["lvl"]/2))+" "+self.currency+"`", inline=False)
+                    embed.add_field(name="**Confirm Level Up**", value="Use `"+self.prefix+"levelup confirm <AMOUNT (optional)>` to confirm your level up", inline=False)
                     await message.channel.send(embed=embed)
             elif command[0] in ["prod", "produce", "lab"]:
                 target = 1
@@ -798,7 +914,7 @@ class MyClient(discord.Client):
                             if remaining[i].startswith("0") and len(remaining[i]) != 1:
                                 remaining[i] = remaining[i][1:]
                         embed.add_field(name="**Curently Producing**", value="There are `"+str(producing)+"` out of `"+str(capacity)+"` drugs currently producing", inline=False)
-                        embed.add_field(name="**Top Producing**", value="You need to wait about **"+str(remaining[0])+" hours and "+str(remaining[1])+" minutes** before your next drug produces", inline=False)
+                        embed.add_field(name="**Top Producing**", value="You need to wait about **"+str(remaining[1])+" minutes and "+str(remaining[2])+" seconds** before your next drug produces", inline=False)
                         embed.add_field(name="**Ready To Collect**", value="There are `"+str(collectable)+"` drugs ready to collect", inline=False)
                         await message.channel.send(embed=embed)
                     elif command[target] in ["prod", "produce"]:
@@ -819,8 +935,8 @@ class MyClient(discord.Client):
                                         produceAmount = int(command[target+3])
                                     except:
                                         return
-                                if powder in self.database["user"][user]["inventory"]["items"]:
-                                    if self.database["user"][user]["inventory"]["items"][powder] >= powderAmount:
+                                if powder in self.database["user"][user]["inventory"]["items"] and powder not in self.notProduceable:
+                                    if self.database["user"][user]["inventory"]["items"][powder] >= powderAmount*produceAmount:
                                         if powderAmount <= 10:
                                             freeCapacity = self.database["user"][user]["lab"]["size"]-len(self.database["user"][user]["producing"])
                                             if produceAmount <= freeCapacity:
@@ -849,7 +965,7 @@ class MyClient(discord.Client):
                                                 for i in range(len(remaining)):
                                                     if remaining[i].startswith("0") and len(remaining[i]) != 1:
                                                         remaining[i] = remaining[i][1:]
-                                                await message.channel.send(message.author.mention+" You started to produce `"+str(powderAmount)+"` grams of `"+powder+"`, production will take around **"+str(remaining[0])+" hours and "+str(remaining[1])+" minutes**")
+                                                await message.channel.send(message.author.mention+" You started to produce `"+str(powderAmount)+"` grams of `"+powder+"`, production will take around **"+str(remaining[1])+" minutes and "+str(remaining[2])+" seconds**")
                                             else:
                                                 await message.channel.send(message.author.mention+" You can't produce more drugs due to lab capacity")
                                         else:
@@ -1028,6 +1144,7 @@ class MyClient(discord.Client):
                         if drugFound == "pure":
                             if amount <= self.database["user"][user]["inventory"]["drugs"]["pure"][command[1]]:
                                 price = round(self.sellPrice[command[1]]/100*90*amount)
+                                price = price+(price/100*10*(self.database["user"][user]["prestige"]-1))
                                 self.database["user"][user]["inventory"]["drugs"]["pure"][command[1]] -= amount
                                 if self.database["user"][user]["inventory"]["drugs"]["pure"][command[1]] == 0:
                                     self.database["user"][user]["inventory"]["drugs"]["pure"].pop(command[1])
@@ -1083,7 +1200,14 @@ class MyClient(discord.Client):
                 user = str(message.author.id)
                 name = message.author.name
                 if self.database["user"][user]["dealRefresh"]+self.cooldowns["dealRefresh"] < time():
-                    self.database["user"][user]["deals"] = self.newDeals(user)
+                    if len(command) == 2:
+                        deals = self.newDeals(user, False, command[1])
+                        if deals != None:
+                            self.database["user"][user]["deals"] = deals
+                        else:
+                            await message.channel.send(message.author.mention+" That drug does not exist/you are not the required level")
+                    else:
+                        self.database["user"][user]["deals"] = self.newDeals(user)
                     self.database["user"][user]["dealRefresh"] = round(time())
                     await message.channel.send(message.author.mention+" You have successfully refreshed your deals")
                 else:
@@ -1091,39 +1215,59 @@ class MyClient(discord.Client):
                     for i in range(len(remaining)):
                         if remaining[i].startswith("0") and len(remaining[i]) != 1:
                             remaining[i] = remaining[i][1:]
-                    await message.channel.send(message.author.mention+" You need to wait **"+str(remaining[0])+" hours and "+str(remaining[1])+" minutes** to refresh the deals again")
+                    await message.channel.send(message.author.mention+" You need to wait **"+str(remaining[1])+" minutes and "+str(remaining[2])+" seconds** to refresh the deals again")
             elif command[0] in ["deal", "trade"]:
                 if len(command) == 3:
                     user = str(message.author.id)
                     name = message.author.name
                     try:
                         dealNumber = int(command[1])
-                        amount = int(command[2])
+                        amount = command[2]
+                        if amount != "max":
+                            amount = int(command[2])
                     except:
                         await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"deal <DEAL_NUMBER> <AMOUNT>`")
                         return
                     deal = self.database["user"][user]["deals"][dealNumber-1]
                     iMix = None
                     for mix in self.database["user"][user]["inventory"]["drugs"]["mixes"]:
-                        if mix["drug"] == deal["drug"] and mix["amount"] >= amount and mix["quality"] >= deal["quality"]:
+                        if amount != "max":
+                            if mix["drug"] == deal["drug"] and mix["amount"] >= amount and mix["quality"] >= deal["quality"]:
+                                iMix = mix
+                        elif amount == "max" and mix["drug"] == deal["drug"] and mix["quality"] >= deal["quality"]:
                             iMix = mix
+                            amount = iMix["amount"]
                     if iMix != None:
                         self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]["amount"] -= amount
                         if self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]["amount"] == 0:
                             del self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]
                         price = round(self.sellPrice[deal["drug"]]/100*(deal["quality"]+25)*amount)
+                        price = price+(price/100*10*(self.database["user"][user]["prestige"]-1))
                         self.database["user"][user]["balance"] += price
                         del self.database["user"][user]["deals"][self.database["user"][user]["deals"].index(deal)]
                         await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams for **"+str(price)+" "+self.currency+"**")
+                        if self.database["user"][user]["gang"] == None:
+                            gang = random.randint(1, 200)
+                            if gang == 200:
+                                self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*8, "lastDeal":0}
+                                await message.channel.send(message.author.mention+" A **gang** just showed up and they want to cooperate with you, you can make **BIG MONEY**!!!\n`"+self.prefix+"gang` for more info")
                     elif deal["drug"] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                        if amount == "max":
+                            amount = self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]]
                         if self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] >= amount:
                             self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] -= amount
                             if self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] == 0:
                                 self.database["user"][user]["inventory"]["drugs"]["pure"].pop(deal["drug"])
                             price = round(self.sellPrice[deal["drug"]]/100*(deal["quality"]+25)*amount)
+                            price = price+(price/100*10*(self.database["user"][user]["prestige"]-1))
                             self.database["user"][user]["balance"] += price
                             del self.database["user"][user]["deals"][self.database["user"][user]["deals"].index(deal)]
                             await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams for **"+str(price)+" "+self.currency+"**")
+                            if self.database["user"][user]["gang"] == None:
+                                gang = random.randint(1, 200)
+                                if gang == 200:
+                                    self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*8, "lastDeal":0}
+                                    await message.channel.send(message.author.mention+" A **gang** just showed up and they want to cooperate with you, you can make **BIG MONEY**!!!\n`"+self.prefix+"gang` for more info")
                         else:
                             await message.channel.send(message.author.mention+" You don't have that much "+self.drugName[deal["drug"]].split(":")[-1][1:].lower())
                     else:
@@ -1433,9 +1577,9 @@ class MyClient(discord.Client):
                                     if command[2] == "solo":
                                         if place == "shop":
                                             caughtChance = 10
-                                            reward = random.randint(1000, 4000)
+                                            reward = random.randint(1000, 5000)
                                         elif place == "bank":
-                                            reward = random.randint(2000, 10000)
+                                            reward = random.randint(5000, 50000)
                                             caughtChance = 5
                                         caught = random.randint(0, caughtChance)
                                         if caught < caughtChance-round(caughtChance/3):
@@ -1450,20 +1594,20 @@ class MyClient(discord.Client):
                                                 self.database["user"][user]["inventory"]["items"].pop("gun")
                                             await message.channel.send(message.author.mention+" Oh shit, you were **CAUGHT BIG TIME** while robbing a **"+place+"** you are going to **JAIL**, and they have taken your gun too...")
                                             self.database["user"][user]["police"]["prison"] = True
-                                            self.database["user"][user]["police"]["expire"] = round(time()+(self.cooldowns["heist"]/2))
+                                            self.database["user"][user]["police"]["expire"] = round(time()+(self.cooldowns["heist"]))
                                         self.database["user"][user]["lastHeist"] = round(time())
+                                    elif command[2] == "team":
+                                        self.database["heists"][user] = {"robbers":[user], "place":place}
+                                        await message.channel.send(message.author.mention+" Is robbing a **"+place+"**, join them with the command `"+self.prefix+"joinheist <@MENTION>`\nYou can start the heist anytime, just use `.startheist`")
                                     else:
-                                        t = round(self.database["user"][user]["lastHeist"]+self.cooldowns["heist"]-time())
-                                        remaining = str(datetime.timedelta(seconds=t)).split(":")
-                                        for i in range(len(remaining)):
-                                            if remaining[i].startswith("0") and len(remaining[i]) != 1:
-                                                remaining[i] = remaining[i][1:]
-                                        await message.channel.send(message.author.mention+" You need to wait **"+remaining[1]+" minutes and "+remaining[2]+" seconds** before participating in a heist again")
-                                elif command[2] == "team":
-                                    self.database["heists"][user] = {"robbers":[user], "place":place}
-                                    await message.channel.send(message.author.mention+" Is robbing a **"+place+"**, join them with the command `"+self.prefix+"joinheist <@MENTION>`\nYou can start the heist anytime, just use `.startheist`")
+                                        await message.channel.send(message.author.mention+" Please use `"+self.prefix+"rob <PLACE> <TEAM/SOLO>`")
                                 else:
-                                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"rob <PLACE> <TEAM/SOLO>`")
+                                    t = round(self.database["user"][user]["lastHeist"]+self.cooldowns["heist"]-time())
+                                    remaining = str(datetime.timedelta(seconds=t)).split(":")
+                                    for i in range(len(remaining)):
+                                        if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                            remaining[i] = remaining[i][1:]
+                                    await message.channel.send(message.author.mention+" You need to wait **"+remaining[1]+" minutes and "+remaining[2]+" seconds** before participating in a heist again")
                             else:
                                 await message.channel.send(message.author.mention+" You are already in a heist")
                         else:
@@ -1498,17 +1642,19 @@ class MyClient(discord.Client):
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"joinheist <@MENTION>`")
             elif command[0] in ["startheist", "heiststart"]:
                 user = str(message.author.id)
-                if user in self.database["heists"]:
-                    if self.database["heists"][user]["place"] == "shop":
+                author = user
+                if author in self.database["heists"]:
+                    if self.database["heists"][author]["place"] == "shop":
                         caughtChance = 10
                         reward = random.randint(1000, 4000)
                     else:
                         reward = random.randint(2000, 10000)
                         caughtChance = 5
-                    if len(self.database["heists"][user]["robbers"]) >= 2:
+                    if len(self.database["heists"][author]["robbers"]) >= 2:
                         caughtChance += 2
                     info = ""
-                    for user in self.database["heists"][user]["robbers"]:
+                    place = self.database["heists"][author]["place"]
+                    for user in self.database["heists"][author]["robbers"]:
                         caught = random.randint(0, caughtChance)
                         if caught < caughtChance-round(caughtChance/3):
                             self.database["user"][user]["balance"] += reward
@@ -1524,6 +1670,7 @@ class MyClient(discord.Client):
                             self.database["user"][user]["police"]["prison"] = True
                             self.database["user"][user]["police"]["expire"] = round(time()+(self.cooldowns["heist"]/2))
                         self.database["user"][user]["lastHeist"] = round(time())
+                    self.database["heists"].pop(author)
                     await message.channel.send(info)
                 else:
                     await message.channel.send(message.author.mention+" You are not hosting any heists")
@@ -1544,8 +1691,8 @@ class MyClient(discord.Client):
                             else:
                                 gpuCount += 1
                                 ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000), 6)
-                        embed.add_field(name=":hammer_pick: Asic miners ("+str(asicCount)+")", value="Your asic miners have earned "+str(btcMined)+" BTC", inline=False)
-                        embed.add_field(name=":pick: GPU miners ("+str(gpuCount)+")", value="Your GPU miners have earned "+str(ethMined)+" ETH", inline=False)
+                        embed.add_field(name=":hammer_pick: Asic miners ("+str(asicCount)+")", value="Your asic miners have earned "+str(round(btcMined, 6))+" BTC", inline=False)
+                        embed.add_field(name=":pick: GPU miners ("+str(gpuCount)+")", value="Your GPU miners have earned "+str(round(ethMined, 4))+" ETH", inline=False)
                         await message.channel.send(embed=embed)
                     elif command[1] == "add":
                         if len(command) >= 3:
@@ -1616,6 +1763,8 @@ class MyClient(discord.Client):
                                     self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/300)
                                 self.database["user"][user]["mining"][i]["lastCollected"] = round(time())
                                 i += 1
+                            btcMined = round(btcMined, 6)
+                            ethMined = round(ethMined, 4)
                             if btcMined > 0:
                                 if "BTC" in self.database["user"][user]["crypto"]:
                                     self.database["user"][user]["crypto"]["BTC"] += btcMined
@@ -1631,6 +1780,179 @@ class MyClient(discord.Client):
                             await message.channel.send(message.author.mention+" You don't have any miners running")
                 else:
                     await message.channel.send(message.author.mention+" Please specify an action (**info**/**add**/**remove**/**collect**)")
+            elif command[0] in ["sizecalc", "calcsize", "scalc", "calcs"]:
+                if len(command) == 4:
+                    try:
+                        amount = float(command[1])
+                    except:
+                        await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"sizecalc <NUMBER> <SIZE> <TO_SIZE>`\nExample: `"+self.prefix+"sizecalc 1000 grams kilo`")
+                        return
+                    base = amount
+                    source, dest = "grams", "grams"
+                    if command[2] in ["kilo", "kilos", "kg", "k", "kilogram", "kilograms"]:
+                        amount *= 1000
+                        source = "kilos"
+                    elif command[2] in ["ton", "t", "tons"]:
+                        amount *= 1000000
+                        source = "tons"
+                    if command[3] in ["kilo", "kilos", "kg", "k", "kilogram", "kilograms"]:
+                        amount /= 1000
+                        dest = "kilos"
+                    elif command[3] in ["ton", "t", "tons"]:
+                        amount /= 1000000
+                        dest = "tons"
+                    if str(base).split(".")[-1] == "0":
+                        base = int(base)
+                    if str(amount).split(".")[-1] == "0":
+                        amount = int(amount)
+                    await message.channel.send(message.author.mention+" `"+str(base)+"` "+source+" is `"+str(amount)+"` "+dest)
+                else:
+                    await message.channel.send(message.author.mention+" Please use `"+self.prefix+"sizecalc <NUMBER> <SIZE> <TO_SIZE>`\nExample: `"+self.prefix+"sizecalc 1000 grams kilo`")
+            elif command[0] in ["woods", "mushroom", "mushrooms", "forest"]:
+                user = str(message.author.id)
+                if self.database["user"][user]["lvl"] >= 10:
+                    if self.database["user"][user]["woodsTime"]+self.cooldowns["woods"] < time():
+                        basketBroke = False
+                        amount = 25
+                        if "basket" in self.database["user"][user]["inventory"]["items"]:
+                            if self.database["user"][user]["inventory"]["items"]["basket"] > 0:
+                                amount += 25
+                                r = random.randint(1, 10)
+                                if r == 10:
+                                    basketBroke = True
+                        pick = []
+                        for shroom in self.shrooms:
+                            pick += [shroom]*self.shrooms[shroom]
+                        shrooms = {"saucer":0, "knobby":0, "bohemica":0}
+                        for _ in range(amount):
+                            shroom = random.choice(pick)
+                            shrooms[shroom] += 1
+                        for shroom in shrooms:
+                            if shrooms[shroom] > 0:
+                                if shroom in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                    self.database["user"][user]["inventory"]["drugs"]["pure"][shroom] += shrooms[shroom]
+                                else:
+                                    self.database["user"][user]["inventory"]["drugs"]["pure"][shroom] = shrooms[shroom]
+                        if basketBroke:
+                            self.database["user"][user]["inventory"]["items"]["basket"] -= 1
+                            if self.database["user"][user]["inventory"]["items"]["basket"] <= 0:
+                                self.database["user"][user]["inventory"]["items"].pop("basket")
+                            await message.channel.send(message.author.mention+" **You fell in the woods and you broke your basket!**\nYou have collected `"+str(shrooms["saucer"])+"x` saucers, `"+str(shrooms["knobby"])+"x` knobbies and `"+str(shrooms["bohemica"])+"x` bohemicas")
+                        else:
+                            await message.channel.send(message.author.mention+" You went to the woods and collected `"+str(shrooms["saucer"])+"x` saucers, `"+str(shrooms["knobby"])+"x` knobbies and `"+str(shrooms["bohemica"])+"x` bohemicas")
+                        self.database["user"][user]["woodsTime"] = round(time())
+                    else:
+                        remaining = str(datetime.timedelta(seconds=round(self.database["user"][user]["woodsTime"]+self.cooldowns["woods"]-time()))).split(":")
+                        for i in range(len(remaining)):
+                            if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                remaining[i] = remaining[i][1:]
+                        await message.channel.send(message.author.mention+" You need to wait **"+str(remaining[1])+" minutes and "+str(remaining[2])+" seconds** to visit the woods again")
+                else:
+                    await message.channel.send(message.author.mention+" You need to be **level 10** before you can collect shrooms")
+            elif command[0] in ["gangdeal", "gdeal", "gang", "dealgang", "dealgangs"]:
+                user = str(message.author.id)
+                name = message.author.name
+                mention = False
+                if len(message.mentions) > 0:
+                    user = str(message.mentions[0].id)
+                    name = message.mentions[0].name
+                    mention = True
+                if self.database["user"][user]["gang"] != None:
+                    if len(command) <= 1:
+                        embed = discord.Embed(title=name+"'s Gang Info", color=discord.Color.dark_red())
+                        embed.add_field(name="Drug", value="They want **"+self.drugName[self.database["user"][user]["gang"]["drug"]]+"**", inline=False)
+                        embed.add_field(name="Max Amount", value="They will buy **"+self.nice_number(self.database["user"][user]["gang"]["maxAmount"])+" grams** at MAX", inline=False)
+                        embed.add_field(name="Quality", value="They want at least **90** quality", inline=False)
+                        embed.add_field(name="Price", value="They will buy at a price of **"+str(round(self.sellPrice[self.database["user"][user]["gang"]["drug"]]/100*150))+" per gram**", inline=False)
+                        await message.channel.send(embed=embed)
+                    elif command[1] in ["remove", "new", "delete", "rm", "del"] and not mention:
+                        self.database["user"][user]["gang"] = None
+                        await message.channel.send(message.author.mention+" You have abandoned your gang, you better watch out...")
+                    elif not mention:
+                        try:
+                            amount = command[1]
+                            if amount != "max":
+                                amount = int(command[1])
+                        except:
+                            await message.channel.send(message.author.mention+" Invalid number, please use `"+self.prefix+"gang <AMOUNT>`")
+                            return
+                        deal = self.database["user"][user]["gang"]
+                        if deal["lastDeal"]+self.cooldown["gang"] < time():
+                            if amount <= self.database["user"][user]["gang"]["maxAmount"]:
+                                iMix = None
+                                for mix in self.database["user"][user]["inventory"]["drugs"]["mixes"]:
+                                    if mix["drug"] == deal["drug"] and mix["amount"] >= amount and mix["quality"] >= 90:
+                                        iMix = mix
+                                    elif amount == "max" and mix["drug"] == deal["drug"] and mix["quality"] >= 90:
+                                        iMix = mix
+                                        amount = iMix["amount"]
+                                if iMix != None:
+                                    price = round(amount*(self.sellPrice[deal["drug"]]/100*150))
+                                    price = price+(price/100*10*(self.database["user"][user]["prestige"]-1))
+                                    self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]["amount"] -= amount
+                                    if self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]["amount"] <= 0:
+                                        del self.database["user"][user]["inventory"]["drugs"]["mixes"][self.database["user"][user]["inventory"]["drugs"]["mixes"].index(iMix)]
+                                    self.database["user"][user]["balance"] += price
+                                    await message.channel.send(message.author.mention+" You have sold `"+self.nice_number(amount)+" grams` of **"+self.drugName[deal["drug"]].split(":")[-1][1:].lower()+" mix** for `"+self.nice_number(price)+" "+self.currency+"`")
+                                    self.database["user"][user]["gang"]["lastDeal"] = round(time())
+                                elif deal["drug"] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
+                                    if amount == "max":
+                                        amount = self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]]
+                                    if self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] >= amount:
+                                        price = round(amount*(self.sellPrice[deal["drug"]]/100*150))
+                                        price = price+(price/100*5*(self.database["user"][user]["prestige"]-1))
+                                        self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] -= amount
+                                        if self.database["user"][user]["inventory"]["drugs"]["pure"][deal["drug"]] <= 0:
+                                            self.database["user"][user]["inventory"]["drugs"]["pure"].pop(deal["drug"])
+                                        self.database["user"][user]["balance"] += price
+                                        await message.channel.send(message.author.mention+" You have sold `"+self.nice_number(amount)+" grams` of **"+self.drugName[deal["drug"]].split(":")[-1][1:].lower()+"** for `"+self.nice_number(price)+" "+self.currency+"`")
+                                        self.database["user"][user]["gang"]["lastDeal"] = round(time())
+                                    else:
+                                        await message.channel.send(message.author.mention+" You don't have that much "+deal["drug"])
+                                else:
+                                    await message.channel.send(message.author.mention+" You don't have the requested drug")
+                            else:
+                                await message.channel.send(message.author.mention+" They want **"+self.nice_number(self.database["user"][user]["gang"]["amount"])+" grams** at max")
+                        else:
+                            remaining = str(datetime.timedelta(seconds=round(deal["lastDeal"]+self.cooldown["gang"]-time()))).split(":")
+                            for i in range(len(remaining)):
+                                if remaining[i].startswith("0") and len(remaining[i]) != 1:
+                                    remaining[i] = remaining[i][1:]
+                            await message.channel.send(message.author.mention+" You need to wait **"+remaining[0]+" hours "+remaining[1]+" minutes and "+remaining[2]+" seconds** before you can sell to the gang again")
+                    else:
+                        message.channel.send(message.author.mention+" Please use `"+self.prefix+"gang <AMOUNT/remove (optional)>`")
+                else:
+                    if not mention:
+                        name = "you"
+                    await message.channel.send(message.author.mention+" Currently there are no gangs interested in "+name)
+            elif command[0] == "prestige":
+                user = str(message.author.id)
+                if len(command) <= 1:
+                    embed = discord.Embed(title="Prestige Menu", description="**If you prestige you will lose everyting accept your prestige level** (+10% sell bonus)", color=discord.Color.greyple())
+                    lvl, bal = 25, 10
+                    for _ in range(self.database["user"][user]["prestige"]):
+                        lvl *= 2
+                        bal *= 2
+                    embed.add_field(name="Requirements", value="You need to have the best buildings in the game + "+str(bal)+"mil balance + lvl "+str(lvl), inline=False)
+                    embed.add_field(name="Command", value="Use `"+self.prefix+"prestige confirm` to prestige", inline=False)
+                    await message.channel.send(embed=embed)
+                elif command[1] == "confirm":
+                    lvl, bal = 25, 10
+                    for _ in range(self.database["user"][user]["prestige"]):
+                        lvl *= 2
+                        bal *= 2
+                    if self.database["user"][user]["balance"] >= bal*1000000:
+                        if self.database["user"][user]["lvl"] >= lvl:
+                            if self.database["user"][user]["lab"] == self.buildings["lab"][-1] and self.database["user"][user]["house"] == self.buildings["house"][-1] and self.database["user"][user]["warehouse"] == self.buildings["warehouse"][-1]:
+                                self.database["user"][user] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time()), "police":{"prison":False, "expire":round(time())}, "crypto":{}, "lastHeist":0, "mining":[], "lastMsg":round(time()), "woodsTime":0, "gang":None, "prestige":self.database["user"][user]["prestige"]+1}
+                                await message.channel.send(message.author.mention+" You **successfully presiged** to the **"+self.database["user"][user]["prestige"]+"th prestige** level")
+                            else:
+                                await message.channel.send(message.author.mention+" You are missing some buildings")
+                        else:
+                            await message.channel.send(message.author.mention+" You need to have at least "+str(lvl)+" level")
+                    else:
+                        await message.channel.send(message.author.mention+" You need to have at least "+str(bal)+" milion")
+            self.database["user"][str(message.author.id)]["lastMsg"] = round(time())
 
 if __name__ == "__main__":
     client = MyClient()
