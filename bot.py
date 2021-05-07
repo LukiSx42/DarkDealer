@@ -4,7 +4,6 @@ from platform import system
 from math import *
 
 # TODO LIST
-# Redo growing plants database thing so bot = faster (big project)
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -13,13 +12,15 @@ class MyClient(discord.Client):
     def nice_number(self, num):
         final = ""
         indx = 0
-        for char in str(num)[::-1]:
+        for char in str(num).split(".")[0][::-1]:
             indx += 1
             if indx % 3 != 0:
                 final += char
             else:
                 final += char+" "
         final = final[::-1]
+        if "." in str(num):
+            final += "." + str(num).split(".")[-1]
         if final.startswith(" "):
             final = final[1:]
         return final
@@ -36,7 +37,7 @@ class MyClient(discord.Client):
         self.description = {"pot":"A flower pot, used to grow weed. (id => `pot`)", "led":"Cheap and not power efficient lamp. (750W) (id => `led`)", "hid":"High quality and power efficient lamp. (500W) (id => `hid`)", "dryer":"A better way to dry weed, gives you 20% more weed. (id => `dryer`)", "ruderalis":"Avarage seeds, fast growth, 20g per plant. (id => `ruderalis`)", "indica":"Grat seeds, slow growth, 30g per plant. (id => `indica`)", "microscope":"Used to analyze drugs. (id => `microscope`)", "meth":"1g powder ==> 4g crystal meth (id => `meth`)", "cocaine":"1g powder ==> 3g cocaine (id => `cocaine`)", "heroin":"1g powder ==> 4g herion (id => `heroin`)", "amp":"1g powder ==> 5g amphetamine (id => `amp`/`amphetamine`)", "mixer":"Needed to mix drugs. (id => `mixer`)", "sugar":"Used to mix drugs with. (id => `sugar`)", "wash":"Used to mix drugs with. (id => `wash`)", "soda":"Used to mix drugs with. (id => `soda`)", "amf":"1g amfetamin ==> 5g mdma (id => `amf`)", "grape":"Needed to produce MDMA (id => `grape`)", "gun":"You can rob with this thing (id => `gun`)", "a11":"You can mine bitcoin with this. (id => `a11`)", "a10":"You can mine bitcoin with this. (id => `a10`)", "a9":"You can mine bitcoin with this. (id => `a9`)", "3090rig":"You can mine ethereum with this. (id => `3090rig`)", "3080rig":"You can mine ethereum with this. (id => `3080rig`)", "3070rig":"You can mine ethereum with this. (id => `3070rig`)", "2080rig":"You can mine ethereum with this. (id => `2080rig`)", "2070rig":"You can mine ethereum with this. (id => `2070rig`)", "filter":"This boosts your weed growth. (id => `filter`)", "basket":"A better way to collect shrooms. (id => `basket`)"}
         self.drugDescription = {"wetweed":"You need to dry wet weed to turn it into sellable weed", "weed":"The green stuff", "meth":"White powder with good effects", "cocaine":"The most expensive drug", "heroin":"The more serious drug", "amp":"So you wanna be fast?", "mdma":"Relaxing pills", "saucer":"The most rare magic mushroom out there. (id => `saucer`)", "knobby":"Expensive and rare shroom. (id => `knobby`)", "bohemica":"The most common magic mushroom (id => `bohemica`)"}
         self.drugLvls = {"1":["weed", "amp"], "10":["meth", "saucer", "knobby", "bohemica"], "25":["cocaine", "heroin", "mdma"]}
-        self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":15, "cocaine":30, "heroin":10, "amp":7, "lab1":15000, "lab2":50000, "lab3":250000, "mixer":5000, "soda":7, "wash":2, "sugar":5, "amf":25, "gun":1000, "a11":20000, "a10":15000, "a9":10000, "3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000, "filter":3000, "basket":500}
+        self.prices = {"pot":30, "led":150, "hid":1000, "dryer":2500, "ruderalis":12, "indica":20, "microscope":2000, "meth":15, "cocaine":30, "heroin":10, "amp":7, "lab1":15000, "lab2":50000, "lab3":250000, "mixer":5000, "soda":5, "wash":2, "sugar":3, "amf":25, "gun":1000, "a11":20000, "a10":15000, "a9":10000, "3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000, "filter":3000, "basket":500}
         self.miners = {"asic":{"a11":20000, "a10":15000, "a9":10000}, "gpu":{"3090rig":20000, "3080rig":12000, "3070rig":10000, "2080rig":7500, "2070rig":5000}}
         self.hashRate = {"a11":5000, "a10":3500, "a9":1500, "3090rig":10000, "3080rig":7500, "3070rig":6000, "2080rig":5000, "2070rig":3500}
         self.producmentTime = {"meth":540, "cocaine":1200, "herion":660, "amp":600, "mdma":600}
@@ -75,13 +76,13 @@ class MyClient(discord.Client):
             for building in self.buildings[buildingType]:
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
-        self.sellPrice = {"weed":8, "amp":10, "meth":12, "heroin":15, "cocaine":45, "mdma":15, "saucer":150, "knobby":30, "bohemica":15}
+        self.sellPrice = {"weed":8, "amp":10, "meth":12, "heroin":15, "cocaine":50, "mdma":15, "saucer":150, "knobby":30, "bohemica":15}
         self.cooldowns = {"dealRefresh":300, "labBoost":120, "ruderalis":600, "indica":900, "police":300, "heist":600, "msg":2, "woods":300, "saucer":2400, "knobby":1800, "bohemica":1200, "gang":3600}
         self.cryptoName = {"BTC":"Bitcoin", "ETH":"Ethereum", "LTC":"Litecoin", "DOGE":"Dogecoin"}
         self.cryptos = ["BTC", "ETH", "LTC", "DOGE"]
         self.electricityMultiplayer = 1.5
         self.jobs = {"windowcleaner":(120, 500), "youtuber":(60, 400), "programmer":(600, 5000), "mafian":(1800, 25000)}
-        self.VIP = ["151721375210536961", "682644855713038384", "264127862498525186", "670545442307702794", "794223995691991052"]
+        self.VIP = ["151721375210536961", "682644855713038384", "264127862498525186", "670545442307702794", "794223995691991052", "311033331980435479"]
         self.tips = [
             (":potted_plant: Growing Weed Tip", "Warehouses are better than a reagular house, you can list all warehouses with `"+self.prefix+"shop buildigs warehouse` and buy any warehouse with `"+self.prefix+"buy WAREHOUSE`"),
             (":potted_plant: Drying Weed Tip", "You can buy a `dryer` to get 20%+ weed when you dry it."),
@@ -375,6 +376,14 @@ class MyClient(discord.Client):
                                     embed.add_field(name=":microscope: **"+building["type"]+"**", value=building["name"]+" (id => `"+building["id"]+"`)\nElectricity: "+str(building["electricity"])+" "+self.currency+" | Production capacity: "+str(building["size"])+" | Price: "+self.nice_number(building["price"])+" "+self.currency, inline=False)
                         embed.set_footer(text="You can buy a building with "+self.prefix+"buy <BUILDING_ID>")
                         await message.channel.send(embed=embed)
+                    elif command[1] in self.prices:
+                        amount = 0
+                        if command[1] in self.database["user"][user]["inventory"]["items"]:
+                            amount = self.database["user"][user]["inventory"]["items"][command[1]]
+                        embed = discord.Embed(title=self.fullName[command[1]]+" ("+self.nice_number(amount)+")", color=discord.Color.dark_gray())
+                        embed.add_field(name=":dollar: Price:", value="The price of "+self.fullName[command[1]].split(":")[-1][1:].lower()+" is **"+self.nice_number(self.prices[command[1]])+"**", inline=False)
+                        embed.add_field(name=self.fullName[command[1]].split(" ")[0]+" Owned:", value="You own **"+self.nice_number(amount)+"x** this item", inline=False)
+                        await message.channel.send(embed=embed)
                     else:
                         await message.channel.send(message.author.mention+" There is no shop with that ID, use `"+self.prefix+"shops` to view all available shops")
                 else:
@@ -496,7 +505,7 @@ class MyClient(discord.Client):
                                 self.database["user"][user]["crypto"][crypto] -= amount
                                 if self.database["user"][user]["crypto"][crypto] <= 0:
                                     self.database["user"][user]["crypto"].pop(crypto)
-                                await message.channel.send(message.author.mention+" You have sold **"+str(amount)+" "+crypto+"** for `"+str(price)+"` at price `"+str(cryptoPrice)+"` per "+crypto)
+                                await message.channel.send(message.author.mention+" You have sold **"+str(amount)+" "+crypto+"** for `"+self.nice_number(price)+"` at price `"+str(cryptoPrice)+"` per "+crypto)
                             else:
                                 await message.channel.send(message.author.mention+" You don't have that much "+crypto)
                         else:
@@ -629,11 +638,11 @@ class MyClient(discord.Client):
                         topTime = 0
                         for plant in self.database["user"][user]["growing"]:
                             if plant["growTime"] < time():
-                                grown += 1
+                                grown += 1*plant["amount"]
                             else:
                                 if plant["growTime"] < topTime or topTime == 0:
                                     topTime = plant["growTime"]
-                                growing += 1
+                                growing += 1*plant["amount"]
                         destTime = 0
                         if topTime != 0:
                             destTime = topTime-time()
@@ -1151,11 +1160,11 @@ class MyClient(discord.Client):
                                 self.database["user"][user]["balance"] += price
                                 police = random.randint(1, 20)
                                 if police < 15:
-                                    await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                    await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+self.nice_number(price)+" "+self.currency+"**")
                                 elif police < 20:
-                                    await message.channel.send(message.author.mention+" You almost got caught by the cops, but you have successfully sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                    await message.channel.send(message.author.mention+" You almost got caught by the cops, but you have successfully sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+self.nice_number(price)+" "+self.currency+"**")
                                 else:
-                                    await message.channel.send(message.author.mention+" You got CAUGHT by the COPS! You will be put into prison! Also you have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+str(price)+" "+self.currency+"**")
+                                    await message.channel.send(message.author.mention+" You got CAUGHT by the COPS! You will be put into prison! Also you have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" for **"+self.nice_number(price)+" "+self.currency+"**")
                                     self.database["user"][user]["police"]["prison"] = True
                                     self.database["user"][user]["police"]["expire"] = time()+self.cooldowns["police"]
                             else:
@@ -1173,11 +1182,11 @@ class MyClient(discord.Client):
                                 self.database["user"][user]["balance"] += price
                                 police = random.randint(1, 20)
                                 if police < 15:
-                                    await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                    await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+self.nice_number(price)+" "+self.currency+"**")
                                 elif police < 20:
-                                    await message.channel.send(message.author.mention+" You almost got caught by the cops, but you have successfully sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                    await message.channel.send(message.author.mention+" You almost got caught by the cops, but you have successfully sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+self.nice_number(price)+" "+self.currency+"**")
                                 else:
-                                    await message.channel.send(message.author.mention+" You got CAUGHT by the COPS! You will be put into prison! Also you have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+str(price)+" "+self.currency+"**")
+                                    await message.channel.send(message.author.mention+" You got CAUGHT by the COPS! You will be put into prison! Also you have sold "+str(amount)+" grams of"+self.drugName[command[1]].split(":")[-1].lower()+" mix for **"+self.nice_number(price)+" "+self.currency+"**")
                                     self.database["user"][user]["police"]["prison"] = True
                                     self.database["user"][user]["police"]["expire"] = time()+self.cooldowns["police"]
                             else:
@@ -1245,10 +1254,10 @@ class MyClient(discord.Client):
                         price = price+(price/100*10*(self.database["user"][user]["prestige"]-1))
                         self.database["user"][user]["balance"] += price
                         del self.database["user"][user]["deals"][self.database["user"][user]["deals"].index(deal)]
-                        await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams for **"+str(price)+" "+self.currency+"**")
+                        await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams for **"+self.nice_number(price)+" "+self.currency+"**")
                         if self.database["user"][user]["gang"] == None:
-                            gang = random.randint(1, 200)
-                            if gang == 200:
+                            gang = random.randint(1, 25)
+                            if gang == 25:
                                 self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*8, "lastDeal":0}
                                 await message.channel.send(message.author.mention+" A **gang** just showed up and they want to cooperate with you, you can make **BIG MONEY**!!!\n`"+self.prefix+"gang` for more info")
                     elif deal["drug"] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
@@ -1262,10 +1271,10 @@ class MyClient(discord.Client):
                             price = price+(price/100*10*(self.database["user"][user]["prestige"]-1))
                             self.database["user"][user]["balance"] += price
                             del self.database["user"][user]["deals"][self.database["user"][user]["deals"].index(deal)]
-                            await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams for **"+str(price)+" "+self.currency+"**")
+                            await message.channel.send(message.author.mention+" You have sold "+str(amount)+" grams for **"+self.nice_number(price)+" "+self.currency+"**")
                             if self.database["user"][user]["gang"] == None:
-                                gang = random.randint(1, 200)
-                                if gang == 200:
+                                gang = random.randint(1, 25)
+                                if gang == 25:
                                     self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*8, "lastDeal":0}
                                     await message.channel.send(message.author.mention+" A **gang** just showed up and they want to cooperate with you, you can make **BIG MONEY**!!!\n`"+self.prefix+"gang` for more info")
                         else:
@@ -1686,11 +1695,11 @@ class MyClient(discord.Client):
                         asicCount, btcMined, gpuCount, ethMined = 0, 0, 0, 0
                         for miner in self.database["user"][user]["mining"]:
                             if miner["name"].startswith("a"):
-                                asicCount += 1
-                                btcMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/1800000), 6)
+                                asicCount += 1*miner["amount"]
+                                btcMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/1800000)*miner["amount"], 6)
                             else:
-                                gpuCount += 1
-                                ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000), 6)
+                                gpuCount += 1*miner["amount"]
+                                ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000)*miner["amount"], 6)
                         embed.add_field(name=":hammer_pick: Asic miners ("+str(asicCount)+")", value="Your asic miners have earned "+str(round(btcMined, 6))+" BTC", inline=False)
                         embed.add_field(name=":pick: GPU miners ("+str(gpuCount)+")", value="Your GPU miners have earned "+str(round(ethMined, 4))+" ETH", inline=False)
                         await message.channel.send(embed=embed)
@@ -1708,8 +1717,15 @@ class MyClient(discord.Client):
                                 if miner in self.database["user"][user]["inventory"]["items"]:
                                     if self.database["user"][user]["inventory"]["items"][miner] >= amount:
                                         if self.database["user"][user]["house"]["size"]-len(self.database["user"][user]["mining"]) >= amount:
-                                            for _ in range(amount):
-                                                self.database["user"][user]["mining"].append({"name":miner, "lastCollected":round(time())})
+                                            minerFound = False
+                                            for m in self.database["user"][user]["mining"]:
+                                                if m["name"] == miner:
+                                                    minerFound = True
+                                                    break
+                                            if minerFound:
+                                                self.database["user"][user]["mining"][self.database["user"][user]["mining"].index(m)]["amount"] += amount
+                                            else:
+                                                self.database["user"][user]["mining"].append({"name":miner, "lastCollected":round(time()), "amount":amount})
                                             self.database["user"][user]["inventory"]["items"][miner] -= amount
                                             if self.database["user"][user]["inventory"]["items"][miner] <= 0:
                                                 self.database["user"][user]["inventory"]["items"].pop(miner)
@@ -1737,18 +1753,21 @@ class MyClient(discord.Client):
                         if len(self.database["user"][user]["mining"]) >= amount:
                             remove = []
                             for miner in self.database["user"][user]["mining"]:
-                                if miner["name"] == minerName and len(remove) < amount:
+                                if miner["name"] == minerName and miner["amount"] >= amount:
                                     remove.append(miner)
+                                    break
                             for miner in remove:
-                                del self.database["user"][user]["mining"][self.database["user"][user]["mining"].index(miner)]
+                                self.database["user"][user]["mining"][self.database["user"][user]["mining"]]["amount"] -= amount
+                                if self.database["user"][user]["mining"][self.database["user"][user]["mining"]]["amount"] <= 0:
+                                    del self.database["user"][user]["mining"][self.database["user"][user]["mining"].index(miner)]
                                 if miner["name"] in self.database["user"][user]["inventory"]["items"]:
-                                    self.database["user"][user]["inventory"]["items"][miner["name"]] += 1
+                                    self.database["user"][user]["inventory"]["items"][miner["name"]] += 1*amount
                                 else:
-                                    self.database["user"][user]["inventory"]["items"][miner["name"]] = 1
+                                    self.database["user"][user]["inventory"]["items"][miner["name"]] = 1*amount
                             if len(remove) > 0:
-                                await message.channel.send(message.author.mention+" `"+str(len(remove))+"x` miners were removed")
+                                await message.channel.send(message.author.mention+" `"+str(len(remove)*amount)+"x` miners were removed")
                             else:
-                                await message.channel.send(message.author.mention+" There is no miner running with the model name `"+minerName+"`")
+                                await message.channel.send(message.author.mention+" There are not that many miners running with the model name `"+minerName+"`")
                         else:
                             await message.channel.send(message.author.mention+" You dont have that many miners running")
                     elif command[1] == "collect":
@@ -1756,11 +1775,11 @@ class MyClient(discord.Client):
                             btcMined, ethMined, i = 0, 0, 0
                             for miner in self.database["user"][user]["mining"]:
                                 if miner["name"].startswith("a"):
-                                    btcMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/1800000), 6)
-                                    self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/150)
+                                    btcMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/1800000), 6)*miner["amount"]
+                                    self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/150)*miner["amount"]
                                 else:
-                                    ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000), 4)
-                                    self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/300)
+                                    ethMined += round(((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/240000), 4)*miner["amount"]
+                                    self.database["user"][user]["electricity"] += ((time()-miner["lastCollected"])/60/60)*(self.hashRate[miner["name"]]/300)*miner["amount"]
                                 self.database["user"][user]["mining"][i]["lastCollected"] = round(time())
                                 i += 1
                             btcMined = round(btcMined, 6)
