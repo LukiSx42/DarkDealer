@@ -76,8 +76,20 @@ class MyClient(discord.Client):
             for building in self.buildings[buildingType]:
                 building["btype"] = buildingType
                 self.buildingDB[building["id"]] = building
-        self.cars = [("Skoda Favorit", 10000, 58, "https://upload.wikimedia.org/wikipedia/commons/f/fb/Skoda_Favorit_Utrecht_1989.jpg"), ("Mustang GT 5.0", 250000, 460, "https://car-images.bauersecure.com/pagefiles/25079/fordmustang2016-01.jpg"), ("Lamborghini Gallardo", 2500000, 493, "https://www.autocar.co.uk/sites/autocar.co.uk/files/styles/gallery_slide/public/images/car-reviews/first-drives/legacy/gallardo-0638.jpg?itok=-So1NoXA"), ("Ferrari 458 Italia", 5000000, 562, "https://img.drivemag.net/media/default/0001/03/thumb_2493_default_large.jpeg"), ("Lamborghini Aventador SVJ", 25000000, 770, "https://media.caradvice.com.au/image/private/q_auto/v1618445951/wlugwnfjwowhdctoesfm.jpg"), ("McLaren P1", 100000000, 903, "https://ag-spots-2021.o.auroraobjects.eu/2021/03/16/thumbs/mclaren-p1-gtr-c249116032021125657_1.jpg"), ("Bugatti Veyron", 250000000, 1000, "https://preview.thenewsmarket.com/Previews/BGTI/StillAssets/1920x1080/562761_v4.jpg"), ("Koenigsegg Regera", 500000000, 1500, "https://www.autoblog.nl/files/2020/08/koenigsegg-regera-in-het-vk-001-890x612.jpg"), ("Bugatti Bolide", 1000000000, 1825, "https://www.topgear.com/sites/default/files/styles/16x9_1280w/public/images/news-article/2020/10/b98c78ffd730bcece647d7128bb42514/20_bolide_garage_3.jpg?itok=-f_Oshzm")]
-        self.carPrices = {"Skoda Favorit": 10000}
+        self.car = {"favorit": {"engine":"stock", "turbo":None, "nitro":None}, "mustang":{"engine":"stock", "turbo":None, "nitro":None}, "gallardo":{"engine":"stock", "turbo":None, "nitro":None}, "italia":{"engine":"stock", "turbo":None, "nitro":None}, "aventador":{"engine":"stock", "turbo":"twin", "nitro":None}, "p1":{"engine":"stock", "turbo":"twin", "nitro":None}, "veyron":{"engine":"stock", "turbo":"quad", "nitro":None}, "regera":{"engine":"stock", "turbo":"twin", "nitro":None}, "bolide":{"engine":"stock", "turbo":"quad", "nitro":None}, "s15":{"engine":"stock", "turbo":None, "nitro":None}, "rs4":{"engine":"stock", "turbo":None, "nitro":None}, "e36":{"engine":"stock", "turbo":None, "nitro":None}, "supra":{"engine":"stock", "turbo":None, "nitro":None}, "urus":{"engine":"stock", "turbo":"twin", "nitro":None}}
+        self.cars = {"coupe":[("Skoda Favorit", 10000, 58, "https://upload.wikimedia.org/wikipedia/commons/f/fb/Skoda_Favorit_Utrecht_1989.jpg", "favorit"), ("Nissan Silvia s15", 100000, 250, "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Nissan_Silvia_S15_Rocket_Bunny.jpg/480px-Nissan_Silvia_S15_Rocket_Bunny.jpg", "s15"), ("Audi rs4", 1000000, 375, "https://images.pistonheads.com/nimg/36563/B5_011.jpg", "rs4"), ("BMW e36", 2500000, 282, "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/s-l1600-1592412559.jpg", "e36"), ("Toyota Supra MK4", 10000000, 220, "https://i.pinimg.com/564x/d8/76/0f/d8760f5a8ef36f8dce54e5e3e5e99dc1.jpg", "supra")],
+            "sport": [("Mustang GT 5.0", 250000, 460, "https://car-images.bauersecure.com/pagefiles/25079/fordmustang2016-01.jpg", "mustang"), ("Lamborghini Gallardo", 2500000, 493, "https://www.autocar.co.uk/sites/autocar.co.uk/files/styles/gallery_slide/public/images/car-reviews/first-drives/legacy/gallardo-0638.jpg?itok=-So1NoXA", "gallardo"), ("Ferrari 458 Italia", 5000000, 562, "https://img.drivemag.net/media/default/0001/03/thumb_2493_default_large.jpeg", "italia")],
+            "supercar": [("Lamborghini Aventador SVJ", 25000000, 770, "https://media.caradvice.com.au/image/private/q_auto/v1618445951/wlugwnfjwowhdctoesfm.jpg", "aventador"), ("McLaren P1", 100000000, 903, "https://ag-spots-2021.o.auroraobjects.eu/2021/03/16/thumbs/mclaren-p1-gtr-c249116032021125657_1.jpg", "p1"), ("Bugatti Veyron", 250000000, 1000, "https://preview.thenewsmarket.com/Previews/BGTI/StillAssets/1920x1080/562761_v4.jpg", "veyron"), ("Koenigsegg Regera", 500000000, 1500, "https://www.autoblog.nl/files/2020/08/koenigsegg-regera-in-het-vk-001-890x612.jpg", "regera"), ("Bugatti Bolide", 1000000000, 1825, "https://www.topgear.com/sites/default/files/styles/16x9_1280w/public/images/news-article/2020/10/b98c78ffd730bcece647d7128bb42514/20_bolide_garage_3.jpg?itok=-f_Oshzm", "bolide")],
+            "suv": [("Lamborghini Urus", 25000000, 650, "https://www.topspeed.sk/userfiles/articles/16-01/17073/1579183878-lamborghini.urus.2019.1280.01.jpg", "urus")]}
+        self.carPrices = {"favorit": 10000, "mustang":250000, "gallardo":2500000, "italia":5000000, "aventador":25000000, "p1":100000000, "veyron":250000000, "regera":500000000, "bolide":1000000000, "s15":100000, "rs4":1000000, "e36":2500000, "supra":10000000, "urus":25000000}
+        self.carName = {"favorit": "Skoda Favorit", "mustang":"Ford Mustang GT 5.0", "gallardo":"Lamborghini Gallardo", "italia":"Ferrari 458 italia", "aventador":"Lamborghini Aventador SVJ", "p1":"McLaren P1", "veyron":"Bugatti Veyron", "regera":"Koenigsegg Regera", "bolide":"Bugatti Bolide", "s15":"Nissan Silvia s15", "rs4":"Audi rs4", "e36":"BMW e36", "supra":"Toyota Supra MK4", "urus":"Lamborghini Urus"}
+        self.stockEngine = {"favorit":58, "mustang":460, "gallardo":493, "italia":562, "aventador":520, "p1":653, "veyron":250, "regera":1250, "bolide":1075, "s15":250, "rs4":375, "e36":282, "supra":220, "urus":400}
+        self.engines = {"v4":200, "v6":450, "v8":550, "v10":650, "v12":800, "v16":1000, "2jz":1050}
+        self.enginePrices = {"v4": 25000, "v6": 100000, "v8":250000, "v10":750000, "v12":1250000, "v16":2500000, "2jz":5000000}
+        self.turbos = {"single":150, "twin":250, "quad":750}
+        self.turboPrices = {"single":250000, "twin":1000000, "quad":5000000}
+        self.nitros = {"single":250, "double":500, "tiple":750}
+        self.nitroPrices = {"single":500000, "double":2500000, "tiple":10000000}
         self.sellPrice = {"weed":9, "amp":10, "meth":12, "heroin":20, "cocaine":75, "mdma":30, "saucer":130, "knobby":30, "bohemica":15}
         self.cooldowns = {"dealRefresh":300, "labBoost":120, "ruderalis":600, "indica":900, "police":300, "heist":600, "msg":2, "woods":300, "saucer":2400, "knobby":1800, "bohemica":1200, "gang":14400}
         self.cryptoName = {"BTC":"Bitcoin", "ETH":"Ethereum", "LTC":"Litecoin", "DOGE":"Dogecoin"}
@@ -161,7 +173,7 @@ class MyClient(discord.Client):
             t = time.time()
             if str(message.author.id) not in self.database["user"]:
                 await message.channel.send("Hey "+message.author.name+", I see that you are new aroud here. If you want to learn some tips and tricks check this out `"+self.prefix+"help tutorial`")
-                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time.time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time.time()), "police":{"prison":False, "expire":round(time.time())}, "crypto":{}, "lastHeist":0, "mining":[], "lastMsg":round(time.time()), "woodsTime":0, "gang":None, "prestige":1}
+                self.database["user"][str(message.author.id)] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time.time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time.time()), "police":{"prison":False, "expire":round(time.time())}, "crypto":{}, "lastHeist":0, "mining":[], "lastMsg":round(time.time()), "woodsTime":0, "gang":None, "prestige":1, "cars":{}, "activeCar":None}
             if self.database["user"][str(message.author.id)]["lastMsg"]+self.cooldowns["msg"] > time.time() and str(message.author.id) not in self.VIP:
                 t = self.database["user"][str(message.author.id)]["lastMsg"]+self.cooldowns["msg"]-time.time()
                 await message.channel.send(message.author.mention+" Woah, slow down, you need to wait **"+str(round(t))+" seconds** to send another command")
@@ -261,10 +273,12 @@ class MyClient(discord.Client):
                 embed.set_author(name=name+"'s profile", icon_url=str(avatar).replace("size=1024", "size=256"))
                 embed.add_field(name='Level', value=str(self.database["user"][user]["lvl"]), inline=True)
                 embed.add_field(name='Balance', value=self.currency+" "+self.nice_number(self.database["user"][user]["balance"]), inline=True)
-                embed.add_field(name='Prestige', value="Player is currently at prestige level "+str(self.database["user"][user]["prestige"]), inline=False)
+                embed.add_field(name='Prestige', value="Player is currently at prestige **level "+str(self.database["user"][user]["prestige"])+"**", inline=False)
                 embed.add_field(name='Inventory', value="Player has `"+str(len(self.database["user"][user]["inventory"]["items"]))+"` different items in his inventory", inline=False)
                 if self.database["user"][user]["job"] != None:
-                    embed.add_field(name='Employment', value="Player is working as a "+str(self.database["user"][user]["job"]), inline=False)
+                    embed.add_field(name='Employment', value="Player is working as a **"+str(self.database["user"][user]["job"])+"**", inline=False)
+                if len(self.database["user"][user]["cars"]) > 0:
+                    embed.add_field(name='Garage', value="Player has **"+str(len(self.database["user"][user]["cars"]))+"x** cars in his garage", inline=False)
                 await message.channel.send(embed=embed)
             elif command[0] in ["jobs", "joblist"]:
                 embed = discord.Embed(title="Job List", color=discord.Color.blue())
@@ -397,9 +411,15 @@ class MyClient(discord.Client):
                     elif command[1] in ["car", "cars"]:
                         embed = discord.Embed(title=":race_car: Car Dealership", color=discord.Color.red())
                         embed.set_thumbnail(url="https://www.logolynx.com/images/logolynx/91/9143ccc562cc048c073a69461ee082cd.png")
-                        for i in range(len(self.cars)):
-                            car = self.cars[i]
-                            embed.add_field(name=":red_car: "+car[0]+" - "+self.nice_number(car[1])+" "+self.currency, value="Power: "+str(car[2])+" hp", inline=False)
+                        if len(command) >= 3:
+                            if command[2] in ["suv", "coupe", "sport", "supercar"]:
+                                for i in range(len(self.cars[command[2]])):
+                                    car = self.cars[command[2]][i]
+                                    embed.add_field(name=":red_car: "+car[0]+" - "+self.nice_number(car[1])+" "+self.currency, value="Power: "+str(car[2])+" hp (id => `"+car[4]+"`)", inline=False)
+                            else:
+                                embed.add_field(name="Please specify a car type", value="`"+self.prefix+"shop cars <CAR_TYPE>` (suv/coupe/sport/supercar)", inline=False)
+                        else:
+                            embed.add_field(name="Please specify a car type", value="`"+self.prefix+"shop cars <CAR_TYPE>` (suv/coupe/sport/supercar)", inline=False)
                         await message.channel.send(embed=embed)
                     elif command[1] in self.prices:
                         amount = 0
@@ -488,6 +508,16 @@ class MyClient(discord.Client):
                                 await message.channel.send(message.author.mention+" You can't afford to buy that :joy:")
                         else:
                             await message.channel.send(message.author.mention+" Minimum amount is 0.00001 "+crypto)
+                    elif command[1] in self.car:
+                        if command[1] not in self.database["user"][user]["cars"]:
+                            if self.database["user"][user]["balance"]-self.carPrices[command[1]] >= 0:
+                                self.database["user"][user]["balance"] -= self.carPrices[command[1]]
+                                self.database["user"][user]["cars"][command[1]] = self.car[command[1]]
+                                await message.channel.send(message.author.mention+" You have bought a "+str(self.carName[command[1]]))
+                            else:
+                                await message.channel.send(message.author.mention+" You can't afford that :joy:")
+                        else:
+                            await message.channel.send(message.author.mention+" You already own that car")
                     else:
                         await message.channel.send(message.author.mention+" That item/building does not exist, use `.shop <SHOP_ID>` to see all available items and buildings")
             elif command[0] == "sell":
@@ -594,10 +624,10 @@ class MyClient(discord.Client):
                 if len(self.database["user"][user]["inventory"]["drugs"]["pure"]) > 0:
                     for drug in self.database["user"][user]["inventory"]["drugs"]["pure"]:
                         amount = self.database["user"][user]["inventory"]["drugs"]["pure"][drug]
-                        if amount >= 1000:
-                            amount = str(amount/1000) + " kilos"
-                        elif amount >= 1000000:
+                        if amount >= 1000000:
                             amount = str(amount/1000000) + " tons"
+                        elif amount >= 1000:
+                            amount = str(amount/1000) + " kilos"
                         else:
                             amount = str(amount) + " grams"
                         if str(amount).split(".")[-1].split(" ")[0] == "0":
@@ -609,10 +639,10 @@ class MyClient(discord.Client):
                 if len(self.database["user"][user]["inventory"]["drugs"]["mixes"]) > 0:
                     for drug in self.database["user"][user]["inventory"]["drugs"]["mixes"]:
                         amount = drug["amount"]
-                        if amount >= 1000:
-                            amount = str(amount/1000) + " kilos"
-                        elif amount >= 1000000:
+                        if amount >= 1000000:
                             amount = str(amount/1000000) + " tons"
+                        elif amount >= 1000:
+                            amount = str(amount/1000) + " kilos"
                         else:
                             amount = str(amount) + " grams"
                         if len(pages[-1]) < 5:
@@ -937,11 +967,11 @@ class MyClient(discord.Client):
                         producing, capacity, topProducing, collectable = 0, self.database["user"][user]["lab"]["size"], 0, 0
                         for drug in self.database["user"][user]["producing"]:
                             if drug["prodTime"] < time.time():
-                                collectable += 1
+                                collectable += 1*drug["amount"]
                             else:
                                 if drug["prodTime"] < topProducing or topProducing == 0:
                                     topProducing = drug["prodTime"]
-                                producing += 1
+                                producing += 1*drug["amount"]
                         if topProducing != 0:
                             topProducing = round(topProducing-time.time())
                         remaining = str(datetime.timedelta(seconds=topProducing)).split(":")
@@ -991,8 +1021,7 @@ class MyClient(discord.Client):
                                                 targetTime = self.producmentTime[powder]+time.time()-boost
                                                 elec = 1*round((self.producmentTime[powder]-boost)/60)
                                                 self.database["user"][user]["electricity"] += elec
-                                                for _ in range(produceAmount):
-                                                    self.database["user"][user]["producing"].append({"drug":powder, "reward":self.produceReward[powder]*powderAmount, "prodTime":targetTime})
+                                                self.database["user"][user]["producing"].append({"drug":powder, "reward":self.produceReward[powder]*powderAmount, "prodTime":targetTime, "amount":produceAmount})
                                                 self.database["user"][user]["inventory"]["items"][powder] -= powderAmount*produceAmount
                                                 if self.database["user"][user]["inventory"]["items"][powder] == 0:
                                                     self.database["user"][user]["inventory"]["items"].pop(powder)
@@ -1016,18 +1045,19 @@ class MyClient(discord.Client):
                     elif command[target] == "collect":
                         user = str(message.author.id)
                         name = str(message.author.name)
-                        collectable = []
+                        collectable, size = [], 0
                         for drug in self.database["user"][user]["producing"]:
                             if drug["prodTime"] < time.time():
                                 collectable.append(drug)
+                                size += drug["amount"]
                         if len(collectable) > 0:
                             total = 0
                             for drug in collectable:
                                 if drug["drug"] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
-                                    self.database["user"][user]["inventory"]["drugs"]["pure"][drug["drug"]] += drug["reward"]
+                                    self.database["user"][user]["inventory"]["drugs"]["pure"][drug["drug"]] += drug["reward"]*size
                                 else:
-                                    self.database["user"][user]["inventory"]["drugs"]["pure"][drug["drug"]] = drug["reward"]
-                                total += drug["reward"]
+                                    self.database["user"][user]["inventory"]["drugs"]["pure"][drug["drug"]] = drug["reward"]*size
+                                total += drug["reward"]*size
                                 del self.database["user"][user]["producing"][self.database["user"][user]["producing"].index(drug)]
                             await message.channel.send(message.author.mention+" You successfully collected `"+str(total)+"` grams of drugs")
                         else:
@@ -1284,7 +1314,7 @@ class MyClient(discord.Client):
                         if self.database["user"][user]["gang"] == None:
                             gang = random.randint(1, 25)
                             if gang == 25:
-                                self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*8, "lastDeal":0}
+                                self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*10, "lastDeal":0}
                                 await message.channel.send(message.author.mention+" A **gang** just showed up and they want to cooperate with you, you can make **BIG MONEY**!!!\n`"+self.prefix+"gang` for more info")
                     elif deal["drug"] in self.database["user"][user]["inventory"]["drugs"]["pure"]:
                         if amount == "max":
@@ -1301,7 +1331,7 @@ class MyClient(discord.Client):
                             if self.database["user"][user]["gang"] == None:
                                 gang = random.randint(1, 25)
                                 if gang == 25:
-                                    self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*8, "lastDeal":0}
+                                    self.database["user"][user]["gang"] = {"drug":deal["drug"], "maxAmount":amount*10, "lastDeal":0}
                                     await message.channel.send(message.author.mention+" A **gang** just showed up and they want to cooperate with you, you can make **BIG MONEY**!!!\n`"+self.prefix+"gang` for more info")
                         else:
                             await message.channel.send(message.author.mention+" You don't have that much "+self.drugName[deal["drug"]].split(":")[-1][1:].lower())
@@ -1314,7 +1344,7 @@ class MyClient(discord.Client):
                 name = message.author.name
                 if len(command) == 1:
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"market <DRUG_ID>` to view the market, for info: `"+self.prefix+"market info`")
-                elif len(command) == 2: # View the market
+                elif len(command) == 2:
                     embed = discord.Embed(title="Player Market", color=discord.Color.from_rgb(145, 238, 154))
                     if command[1] == "info":
                         embed.add_field(name="**Beginer Info**", value="You can sell/buy drugs from other players here.", inline=False)
@@ -1370,7 +1400,7 @@ class MyClient(discord.Client):
                                     await message.channel.send(message.author.mention+" That deal does not exist")
                             else:
                                 await message.channel.send(message.author.mention+" That drug does not exist")
-                else: # Makret Make/Take
+                else:
                     if command[1] in ["make", "sell", "create"]:
                         if len(command) == 5:
                             if command[2] in self.drugName:
@@ -1853,6 +1883,105 @@ class MyClient(discord.Client):
                     await message.channel.send(message.author.mention+" `"+str(base)+"` "+source+" is `"+str(amount)+"` "+dest)
                 else:
                     await message.channel.send(message.author.mention+" Please use `"+self.prefix+"sizecalc <NUMBER> <SIZE> <TO_SIZE>`\nExample: `"+self.prefix+"sizecalc 1000 grams kilo`")
+            elif command[0] in ["garage", "cars", "carlist", "mycars"]:
+                user = str(message.author.id)
+                name = message.author.name
+                if len(message.mentions) > 0:
+                    user = str(message.mentions[0].id)
+                    name = message.mentions[0].name
+                embed = discord.Embed(title=name+"'s Garage", color=discord.Color.dark_blue())
+                if len(self.database["user"][user]["cars"]) == 0:
+                    embed.add_field(name="Empty", value=name+" has no cars in his garage")
+                else:
+                    for carName in self.database["user"][user]["cars"]:
+                        car = self.database["user"][user]["cars"][carName]
+                        power = self.stockEngine[carName]
+                        if car["nitro"] != None:
+                            power += self.nitros[car["nitro"]]
+                        if car["turbo"] != None:
+                            power += self.turbos[car["turbo"]]
+                        embed.add_field(name=":red_car: "+self.carName[carName]+" (`"+carName+"`)", value=":video_camera: Engine: "+str(car["engine"])+" | :dash: Turbo: "+str(car["nitro"])+" | :fire: Nitro: "+str(car["nitro"])+" bottle | :zap: Power: "+str(round(power))+" hp", inline=False)
+                await message.channel.send(embed=embed)
+            elif command[0] in ["car", "changecar"]:
+                user = str(message.author.id)
+                if len(self.database["user"][user]["cars"]) > 0:
+                    if len(command) >= 2:
+                        if command[1] in self.carName:
+                            if command[1] in self.database["user"][user]["cars"]:
+                                embed = discord.Embed(title=self.carName[command[1]], color=discord.Color.dark_blue())
+                                carFound = False
+                                for carType in self.cars:
+                                    for scar in self.cars[carType]:
+                                        if scar[4] == command[1]:
+                                            carFound = True
+                                            break
+                                    if carFound:
+                                        break
+                                embed.set_thumbnail(url=scar[3])
+                                car = self.database["user"][user]["cars"][command[1]]
+                                power = self.stockEngine[command[1]]
+                                if car["nitro"] != None:
+                                    power += self.nitros[car["nitro"]]
+                                if car["turbo"] != None:
+                                    power += self.turbos[car["turbo"]]
+                                embed.add_field(name=":video_camera: Engine", value=str(car["engine"]), inline=False)
+                                embed.add_field(name=":dash: Turbo", value=str(car["turbo"]), inline=False)
+                                embed.add_field(name=":fire: Nitro", value=str(car["nitro"])+" bottle", inline=False)
+                                embed.add_field(name=":zap: Power", value=str(power)+" hp", inline=False)
+                                self.database["user"][user]["activeCar"] = command[1]
+                                await message.channel.send(embed=embed)
+                            else:
+                                await message.channel.send(message.author.mention+" You dont own that car")
+                        else:
+                            await message.channel.send(message.author.mention+" That car does not exist")
+                    else:
+                        await message.channel.send(message.author.mention+" Please use `"+self.prefix+"car <CAR_ID>`")
+                else:
+                    await message.channel.send(message.author.mention+" You don't own any cars :joy:")
+            elif command[0] in ["tuning", "tune"]:
+                user = str(message.author.id)
+                if self.database["user"][user]["activeCar"] != None:
+                    carName = self.database["user"][user]["activeCar"]
+                    embed = discord.Embed(title="Tuning Shop", description=self.carName[carName], color=discord.Color.dark_blue())
+                    carFound = False
+                    for carType in self.cars:
+                        for scar in self.cars[carType]:
+                            if scar[4] == carName:
+                                carFound = True
+                                break
+                        if carFound:
+                            break
+                    embed.set_thumbnail(url=scar[3])
+                    car = self.database["user"][user]["cars"][carName]
+                    power = self.stockEngine[carName]
+                    if car["nitro"] != None:
+                        power += self.nitros[car["nitro"]]
+                    if car["turbo"] != None:
+                        power += self.turbos[car["turbo"]]
+                    turboList, nitroList, engineList = "", "", ""
+                    for turbo in self.turbos:
+                        turboList += "**"+turbo+"** - "+str(self.turbos[turbo])+" hp ("+str(self.turboPrices[turbo])+" "+self.currency+") | "
+                    for nitro in self.nitros:
+                        nitroList += "**"+nitro+"** - "+str(self.nitros[nitro])+" hp ("+str(self.nitroPrices[nitro])+" "+self.currency+") | "
+                    for engine in self.engines:
+                        engineList += "**"+engine+"** - "+str(self.engines[engine])+" hp ("+str(self.enginePrices[engine])+" "+self.currency+") | "
+                    turboList = turboList[:-3]
+                    nitroList = nitroList[:-3]
+                    engineList = engineList[:-3]
+                    embed.add_field(name=":video_camera: Engine", value=str(car["engine"]), inline=True)
+                    embed.add_field(name=":video_camera: Swapable Engines", value=engineList+"\n", inline=True)
+
+                    embed.add_field(name=":dash: Turbo", value=str(car["turbo"]), inline=True)
+                    embed.add_field(name=":dash: Fitable Turbos", value=turboList+"\n", inline=True)
+
+                    embed.add_field(name=":fire: Nitro", value=str(car["nitro"])+" bottle", inline=True)
+                    embed.add_field(name=":fire: Fitable Nitros", value=nitroList+"\n", inline=True)
+
+                    embed.add_field(name=":zap: Stock Power", value=str(scar[2])+" hp", inline=True)
+                    embed.add_field(name=":zap: Current Power", value=str(power)+" hp", inline=True)
+                    await message.channel.send(embed=embed)
+                else:
+                    await message.channel.send(message.author.mention+" Please use `.car <CAR_ID>` to get in your car first")
             elif command[0] in ["jackpot", "jp", "jackpotpool", "jack", "jackp", "jppool", "jpool"]:
                 user = str(message.author.id)
                 if len(command) >= 2:
@@ -1877,15 +2006,11 @@ class MyClient(discord.Client):
                     for u in self.database["jackpot"]:
                         if u != "lastPull":
                             totalTickets += self.database["jackpot"][u]
-                    remaining = str(datetime.timedelta(seconds=round(self.database["jackpot"]["lastPull"]+86400-time.time()))).split(":")
-                    for i in range(len(remaining)):
-                        if remaining[i].startswith("0") and len(remaining[i]) != 1:
-                            remaining[i] = remaining[i][1:]
                     embed = discord.Embed(title="Jackpot Pool", description="Each :tickets: costs **2 000 "+self.currency+"**", color=discord.Color.gold())
                     embed.set_thumbnail(url="https://i.pinimg.com/originals/7d/db/00/7ddb0029e2bf308cfbcddc1459c7404f.jpg")
                     embed.add_field(name="Pool", value="There are **"+self.nice_number(totalTickets)+"x** :tickets: in the pool today ("+self.nice_number(totalTickets*2000)+" "+self.currency+")", inline=False)
                     embed.add_field(name="Your Tickets", value="You own **"+self.nice_number(tickets)+"x** :tickets: ("+str(round(tickets/totalTickets*100, 2))+"% win chance)", inline=False)
-                    embed.add_field(name="Next Pull", value="The next pull will be at `"+str(round(int(remaining[0])+int(time.strftime('%H:%M:%S').split(":")[0])))+":"+str(round(int(remaining[1])+int(time.strftime('%H:%M:%S').split(":")[1])))+"` (UTC +2)", inline=False)
+                    embed.add_field(name="Next Pull", value="The next pull will be at `"+str(datetime.datetime.fromtimestamp(self.database["jackpot"]["lastPull"])).split(" ")[1]+"` (UTC)", inline=False)
                     await message.channel.send(embed=embed)
             elif command[0] in ["woods", "mushroom", "mushrooms", "forest"]:
                 user = str(message.author.id)
@@ -2023,8 +2148,19 @@ class MyClient(discord.Client):
                     if self.database["user"][user]["balance"] >= bal*1000000:
                         if self.database["user"][user]["lvl"] >= lvl:
                             if self.database["user"][user]["lab"] == self.buildings["lab"][-1] and self.database["user"][user]["house"] == self.buildings["house"][-1] and self.database["user"][user]["warehouse"] == self.buildings["warehouse"][-1]:
-                                self.database["user"][user] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time.time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time.time()), "police":{"prison":False, "expire":round(time.time())}, "crypto":{}, "lastHeist":0, "mining":[], "lastMsg":round(time.time()), "woodsTime":0, "gang":None, "prestige":self.database["user"][user]["prestige"]+1}
-                                await message.channel.send(message.author.mention+" You **successfully presiged** to the **"+self.database["user"][user]["prestige"]+"th prestige** level")
+                                self.database["user"][user] = {"name":message.author.name, "balance":1000, "house":self.starterHouse, "warehouse":None, "lab":None, "upgrades":{"lab":0}, "inventory":{"items":{}, "drugs":{"pure":{}, "mixes":[]}}, "lvl":1, "job":None, "lastJob":0, "growing":[], "producing":[], "electricity":0, "lastBill":round(time.time()), "deals":self.newDeals(str(message.author.id), True), "dealRefresh":round(time.time()), "police":{"prison":False, "expire":round(time.time())}, "crypto":{}, "lastHeist":0, "mining":[], "lastMsg":round(time.time()), "woodsTime":0, "gang":None, "prestige":self.database["user"][user]["prestige"]+1, "cars":{}, "activeCar":None}
+                                remove = {}
+                                for drug in self.database["market"]:
+                                    for deal in self.database["market"][drug]:
+                                        if deal["author"] == user:
+                                            if drug in remove:
+                                                remove[drug] += [deal]
+                                            else:
+                                                remove[drug] = [deal]
+                                for drug in remove:
+                                    for deal in remove[drug]:
+                                        del self.database["market"][drug][self.database["market"][drug].index(deal)]
+                                await message.channel.send(message.author.mention+" You **successfully presiged** to the **"+str(self.database["user"][user]["prestige"])+"th prestige** level")
                             else:
                                 await message.channel.send(message.author.mention+" You are missing some buildings")
                         else:
