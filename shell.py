@@ -353,20 +353,20 @@ class shell:
                                         else:
                                             return("You have to grow at least 1 seed", self.database)
                                     if capacity-growing >= amount:
-                                        lamps = []
+                                        lamps = {"hid":0, "led":0}
                                         lamp = None
                                         pots = 0
                                         pot = False
                                         for plant in self.database["user"][user]["growing"]:
                                             if plant["place"] != "field":
-                                                lamps += [plant["lamp"]]*plant["amount"]
+                                                lamps[plant["lamp"]] += plant["amount"]
                                                 pots += 1*plant["amount"]
                                         if "hid" in self.database["user"][user]["inventory"]["items"]:
-                                            if self.database["user"][user]["inventory"]["items"]["hid"] >= lamps.count("hid")+amount:
+                                            if self.database["user"][user]["inventory"]["items"]["hid"] >= lamps["hid"]+amount:
                                                 lamp = "hid"
                                         if lamp == None:
                                             if "led" in self.database["user"][user]["inventory"]["items"]:
-                                                if self.database["user"][user]["inventory"]["items"]["led"] >= lamps.count("led")+amount:
+                                                if self.database["user"][user]["inventory"]["items"]["led"] >= lamps["led"]+amount:
                                                     lamp = "led"
                                         if "pot" in self.database["user"][user]["inventory"]["items"]:
                                             if self.database["user"][user]["inventory"]["items"]["pot"] >= pots+amount:
