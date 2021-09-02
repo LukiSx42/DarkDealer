@@ -87,7 +87,7 @@ class MyClient(discord.Client):
 if __name__ == "__main__":
     client = MyClient()
     client.startup()
-    token = "NzM1NDk1MTEyMjM4NTYzMzI4.XxhFMw.Wr4VmwFAHsFpArhKetC2wnKf34c"
+    token = ""
     if token == "":
         if str(system()).lower() == "windows":
             path = "C:\\Program Files\\DarkDealer\\token.tk"
